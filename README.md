@@ -35,7 +35,7 @@ C. Cộng tác viên
 - Xem, kết thúc các sân đang hoạt động trong thời gian này (Tính tiền)
 
 D. Quản trị viên (Toàn quyền)
-- Quản lý sân bóng
+- Quản lý sân bóng (Gồm cả bảo trì)
 - Quản lý loại sân
 - Sửa giờ cao điểm
 - Quản lý yêu cầu đặt sân 
