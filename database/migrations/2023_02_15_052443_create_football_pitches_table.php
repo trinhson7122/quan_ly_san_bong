@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedDouble('price_per_hour');
             $table->unsignedDouble('price_per_peak_hour');
             $table->boolean('is_maintenance')->default(false);
-            $table->id('football_pitch_id')->nullable();
+            $table->id('football_pitch_link_id')->nullable();
             $table->foreignId('pitch_type_id')->constrained('pitch_types');//foreign key
             $table->timestamps();
         });
