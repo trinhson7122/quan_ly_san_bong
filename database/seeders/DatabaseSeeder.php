@@ -76,14 +76,6 @@ class DatabaseSeeder extends Seeder
                 'pitch_type_id' => 1,
             ]);
         }
-        FootballPitchLink::create([
-            'from_football_pitch_id' => '1',
-            'to_football_pitch_id' => '2',
-        ]);
-        FootballPitchLink::create([
-            'from_football_pitch_id' => '3',
-            'to_football_pitch_id' => '4',
-        ]);
         FootballPitch::create([
             'name' => 'Sân 1 + 2',
             'time_start' => '7:00:00',
@@ -91,7 +83,8 @@ class DatabaseSeeder extends Seeder
             'price_per_hour' => '1000000',
             'price_per_peak_hour' => '1200000',
             'pitch_type_id' => 2,
-            'football_pitch_link_id' => 1,
+            'from_football_pitch_id' => 1,
+            'to_football_pitch_id' => 2,
         ]);
         FootballPitch::create([
             'name' => 'Sân 3 + 4',
@@ -100,7 +93,8 @@ class DatabaseSeeder extends Seeder
             'price_per_hour' => '1000000',
             'price_per_peak_hour' => '1200000',
             'pitch_type_id' => 2,
-            'football_pitch_link_id' => 2,
+            'from_football_pitch_id' => 3,
+            'to_football_pitch_id' => 4,
         ]);
     }
 }

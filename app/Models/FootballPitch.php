@@ -16,7 +16,8 @@ class FootballPitch extends Model
         'price_per_hour',
         'price_per_peak_hour',
         'is_maintenance',
-        'football_pitch_link_id',
         'pitch_type_id',
+        'from_football_pitch_id',
+        'to_football_pitch_id',
     ];
 }
