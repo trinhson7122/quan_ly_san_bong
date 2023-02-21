@@ -19,22 +19,14 @@ class FootballPitchController extends Controller
         return to_route('admin.footballPitch')->with('message', 'Thêm sân bóng thành công');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id): Response
-    {
-        return Response(FootballPitch::find($id));
-    }
-
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(StoreFootballPitchRequest $request, string $id): RedirectResponse
     {
         $obj = FootballPitch::find($id);
-        $obj->update();
+        $obj->update($request->validated());
         return to_route('admin.footballPitch')->with('message', 'Cập nhật sân bóng thành công');
     }
 
@@ -43,6 +35,19 @@ class FootballPitchController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
+        $obj = FootballPitch::find($id);
+        $obj->delete();
         return to_route('admin.footballPitch')->with('message', 'Xóa sân bóng thành công');
+    }
+
+    public function maintenance(string $id, Request $request)
+    {
+        $obj = FootballPitch::find($id);
+        $request->validate([
+            'is_maintenance' => 'required|in:0,1',
+        ]);
+        $obj->is_maintenance = $request->is_maintenance;
+        $obj->save();
+        return to_route('admin.footballPitch')->with('message', 'Cập nhật tình trạng sân bóng thành công');
     }
 }

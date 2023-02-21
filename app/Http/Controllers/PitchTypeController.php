@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PitchTypeChangeEvent;
 use App\Models\PitchType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class PitchTypeController extends Controller
         ]);
         $pitchType = PitchType::find($id);
         $pitchType->update($validated);
+        //event(new PitchTypeChangeEvent($pitchType, 'pitchType-updated'));
         return to_route('admin.pitchType')->with('message', 'Cập nhật loại sân thành công');
     }
 

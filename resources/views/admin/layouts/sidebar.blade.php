@@ -4,15 +4,23 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+        <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
           <i class="bi bi-grid"></i>
           <span>Trang chủ</span>
         </a>
       </li>
+
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('admin.pitchType') }}">
           <i class="bi bi-grid"></i>
           <span>Quản lý loại sân</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.footballPitch') }}">
+          <i class="bi bi-grid"></i>
+          <span>Quản lý sân bóng</span>
         </a>
       </li>
 

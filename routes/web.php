@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FootballPitchController;
 use App\Http\Controllers\PitchTypeController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,7 @@ Route::middleware('admin')->group(function (){
                 Route::get('/', 'dashboard')->name('dashboard');
                 Route::get('pitchType', 'pitchType')->name('pitchType');
                 Route::get('footballPitch', 'footballPitch')->name('footballPitch');
+                Route::get('footballPitchDetail/{id}', 'footballPitchDetail')->name('footballPitchDetail');
             });
             Route::controller(AuthController::class)->group(function (){
                 Route::get('logout', 'processAdminLogout')->name('logout');
@@ -34,6 +36,15 @@ Route::middleware('admin')->group(function (){
                 Route::put('pitch_type/{id}', 'update')->name('update');
                 Route::delete('pitch_type/{id}', 'destroy')->name('destroy');
                 Route::get('pitch_type/{id}', 'show')->name('show');
+            });
+        });
+        Route::name('footballPitch.')->group(function (){
+            Route::controller(FootballPitchController::class)->group(function (){
+                Route::post('footballPitch', 'store')->name('store');
+                Route::put('footballPitch/{id}', 'update')->name('update');
+                Route::put('footballPitch/{id}', 'maintenance')->name('maintenance');
+                Route::delete('footballPitch/{id}', 'destroy')->name('destroy');
+                Route::get('footballPitch/{id}', 'show')->name('show');
             });
         });
     });

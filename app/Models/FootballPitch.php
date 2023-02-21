@@ -20,4 +20,19 @@ class FootballPitch extends Model
         'from_football_pitch_id',
         'to_football_pitch_id',
     ];
+
+    public function pitchType()
+    {
+        return $this->belongsTo(PitchType::class, 'pitch_type_id');
+    }
+
+    public function fromFootballPitch()
+    {
+        return $this->belongsTo(FootballPitch::class, 'from_football_pitch_id');
+    }
+
+    public function toFootballPitch()
+    {
+        return $this->belongsTo(FootballPitch::class, 'to_football_pitch_id');
+    }
 }

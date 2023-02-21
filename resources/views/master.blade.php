@@ -42,7 +42,21 @@
   @yield('content')
   <!-- Vendor JS Files -->
   <script src="{{ asset('/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+  <script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('70186e1524c4c44a9000', {
+      cluster: 'ap1'
+    });
+
+    var channel = pusher.subscribe('quanlysanbong-channel');
+    channel.bind('pitchType-updated', function(data) {
+      //alert(1);
+    });
+  </script>
   <!-- Template Main JS File -->
   <script src="{{ asset('js/main.js') }}"></script>
   <script src="{{ asset('js/app.js') }}"></script>
