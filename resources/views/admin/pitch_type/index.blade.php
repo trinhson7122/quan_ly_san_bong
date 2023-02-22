@@ -1,17 +1,21 @@
 @extends('admin.extend')
 @section('admin_content')
     <main id="main" class="main">
+        {{-- Tiêu đề --}}
         <div class="pagetitle">
             <h1>Quản lý loại sân</h1>
         </div>
+        {{-- Thông báo khi tác động --}}
         @if (session()->has('message'))
             <div class="alert alert-success">{{ session()->get('message') }}</div>
         @endif
+        {{-- Thông báo khi có lỗi với đầu vào --}}
         @if ($errors->any())
             @foreach ($errors->all() as $item)
                 <div class="alert alert-danger">{{ $item }}</div>
             @endforeach
         @endif
+        {{-- Body --}}
         <section class="section">
             <div class="card">
                 <div class="card-body">
@@ -56,7 +60,7 @@
                 </div>
             </div>
         </section>
-        {{-- modal --}}
+        {{-- modal thêm --}}
         <div class="modal fade" id="add-pitch-type-modal" tabindex="-1" style="display: none;" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -92,6 +96,7 @@
                 </div>
             </div>
         </div>
+        {{-- Modal sửa --}}
         <div class="modal fade" id="update-pitch-type-modal" tabindex="-1" style="display: none;" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

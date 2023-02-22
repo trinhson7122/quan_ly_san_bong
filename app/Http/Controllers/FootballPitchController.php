@@ -27,7 +27,7 @@ class FootballPitchController extends Controller
     {
         $obj = FootballPitch::find($id);
         $obj->update($request->validated());
-        return to_route('admin.footballPitch')->with('message', 'Cập nhật sân bóng thành công');
+        return redirect()->back()->with('message', 'Cập nhật sân bóng thành công');
     }
 
     /**

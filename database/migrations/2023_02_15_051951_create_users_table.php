@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email', 50);
             $table->string('password')->nullable();
             $table->string('address')->nullable();
-            $table->foreignId('provider_id')->nullable()->constrained('providers');//foreign key
+            $table->foreignId('provider_id')->nullable()->constrained('providers')->onDelete('cascade');//foreign key
             $table->unsignedTinyInteger('role')->default(UserRole::Client);
             $table->rememberToken();
             $table->timestamps();

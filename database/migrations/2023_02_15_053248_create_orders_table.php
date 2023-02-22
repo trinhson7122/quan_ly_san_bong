@@ -24,8 +24,8 @@ return new class extends Migration
             $table->unsignedDouble('total');
             $table->unsignedTinyInteger('status')->default(OrderStatusEnum::Wait);
             $table->text('note')->nullable();
-            $table->foreignId('user_id')->constrained('users');//foreign key
-            $table->foreignId('football_pitch_id')->constrained('football_pitches');//foreign key
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');//foreign key
+            $table->foreignId('football_pitch_id')->constrained('football_pitches')->onDelete('cascade');//foreign key
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('football_pitch_details', function (Blueprint $table) {
             $table->id();
             $table->string('image')->nullable();
-            $table->foreignId('football_pitch_id')->constrained('football_pitches');//foreign key
+            $table->foreignId('football_pitch_id')->constrained('football_pitches')->onDelete('cascade');//foreign key
             $table->timestamps();
         });
     }

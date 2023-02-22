@@ -21,9 +21,9 @@ return new class extends Migration
             $table->unsignedDouble('price_per_hour');
             $table->unsignedDouble('price_per_peak_hour');
             $table->boolean('is_maintenance')->default(false);
-            $table->foreignId('pitch_type_id')->constrained('pitch_types');//foreign key
-            $table->foreignId('from_football_pitch_id')->nullable()->constrained('football_pitches');//foreign key
-            $table->foreignId('to_football_pitch_id')->nullable()->constrained('football_pitches');//foreign key
+            $table->foreignId('pitch_type_id')->constrained('pitch_types')->onDelete('cascade');//foreign key
+            $table->foreignId('from_football_pitch_id')->nullable()->constrained('football_pitches')->onDelete('cascade');//foreign key
+            $table->foreignId('to_football_pitch_id')->nullable()->constrained('football_pitches')->onDelete('cascade');//foreign key
             $table->timestamps();
         });
     }

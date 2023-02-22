@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FootballPitchController;
+use App\Http\Controllers\FootballPitchDetailController;
 use App\Http\Controllers\PitchTypeController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,9 +43,15 @@ Route::middleware('admin')->group(function (){
             Route::controller(FootballPitchController::class)->group(function (){
                 Route::post('footballPitch', 'store')->name('store');
                 Route::put('footballPitch/{id}', 'update')->name('update');
-                Route::put('footballPitch/{id}', 'maintenance')->name('maintenance');
+                Route::put('footballPitchMaintenance/{id}', 'maintenance')->name('maintenance');
                 Route::delete('footballPitch/{id}', 'destroy')->name('destroy');
                 Route::get('footballPitch/{id}', 'show')->name('show');
+            });
+        });
+        Route::name('footballPitchDetail.')->group(function (){
+            Route::controller(FootballPitchDetailController::class)->group(function (){
+                Route::post('footballPitchDetail', 'store')->name('store');
+                Route::delete('footballPitchDetail/{id}', 'destroy')->name('destroy');
             });
         });
     });

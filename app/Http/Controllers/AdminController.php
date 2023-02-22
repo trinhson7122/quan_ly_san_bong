@@ -57,6 +57,8 @@ class AdminController extends Controller
         $title = 'Football Pitch Detail';
         $footballPitchDetails = FootballPitchDetail::query()->where('football_pitch_id', $id)->get();
         $footballPitch = FootballPitch::query()->find($id);
+        $pitchTypes = PitchType::all();
+        $footballPitches = FootballPitch::query()->orderByDesc('id')->get();
         $i = 0;
         $arr_fpd = [];
         $arr_fp = [];
@@ -75,18 +77,27 @@ class AdminController extends Controller
             'name' => $item->name,
             'description' => $item->description,
             'pitch_type' => $item->pitchType->quantity,
+            'pitch_type_id' => $item->pitch_type_id,
             'time_start' => timeForHumans($item->time_start),
+            'raw_time_start' => $item->time_start,
             'time_end' => timeForHumans($item->time_end),
+            'raw_time_end' => $item->time_end,
             'price_per_hour' => printMoney($item->price_per_hour),
+            'raw_price_per_hour' => $item->price_per_hour,
             'price_per_peak_hour' => printMoney($item->price_per_peak_hour),
+            'raw_price_per_peak_hour' => $item->price_per_peak_hour,
             'created_at' => $item->created_at->diffForHumans(),
             'is_maintenance' => $item->is_maintenance,
+            'from_football_pitch_id' => $item->from_football_pitch_id,
+            'to_football_pitch_id' => $item->to_football_pitch_id,
             'link_football_pitch' => $item->from_football_pitch_id ? ($item->fromFootballPitch->name . ' - ' . $item->toFootballPitch->name) : '',
         ]);
         return view('admin.football_pitch.detail', [
             'title' => $title,
             'footballPitchDetails' => $arr_fpd,
             'footballPitch' => $arr_fp[0],
+            'pitchTypes' => $pitchTypes,
+            'footballPitches' => $footballPitches,
         ]);
     }
 }
