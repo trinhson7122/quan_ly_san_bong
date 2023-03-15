@@ -35,4 +35,34 @@ class FootballPitch extends Model
     {
         return $this->belongsTo(FootballPitch::class, 'to_football_pitch_id');
     }
+
+    public function timeStart()
+    {
+        return timeForHumans($this->time_start);
+    }
+
+    public function createdAt()
+    {
+        return $this->created_at->diffForHumans();
+    }
+
+    public function timeEnd()
+    {
+        return timeForHumans($this->time_end);
+    }
+
+    public function pricePerHour()
+    {
+        return printMoney($this->price_per_hour);
+    }
+
+    public function pricePerPeakHour()
+    {
+        return printMoney($this->price_per_peak_hour);
+    }
+
+    public function nameFootBallPitchLink()
+    {
+        return $this->from_football_pitch_id ? ($this->fromFootballPitch->name . ' - ' . $this->toFootballPitch->name) : '';
+    }
 }

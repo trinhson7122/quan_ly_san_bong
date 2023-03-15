@@ -49,6 +49,7 @@ class DatabaseSeeder extends Seeder
         ]);
         PeakHour::create([
             'start_at' => '17:00:00',
+            'end_at' => '22:00:00',
         ]);
         User::create([
             'name' => 'Trịnh Xuân Sơn',

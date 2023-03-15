@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FootballPitchController;
 use App\Http\Controllers\FootballPitchDetailController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PitchTypeController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('admin')->group(function (){
+    Route::put('api/order/{id}', [OrderController::class, 'update'])->name('order.update');
+    Route::post('api/order', [OrderController::class, 'store'])->name('order.store');
+    Route::get('api/order', [OrderController::class, 'showAll'])->name('order.showAll');
+    Route::get('api/order/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::prefix('admin')->group(function (){
         Route::name('admin.')->group(function (){
             Route::controller(AdminController::class)->group(function (){
@@ -26,6 +31,7 @@ Route::middleware('admin')->group(function (){
                 Route::get('pitchType', 'pitchType')->name('pitchType');
                 Route::get('footballPitch', 'footballPitch')->name('footballPitch');
                 Route::get('footballPitchDetail/{id}', 'footballPitchDetail')->name('footballPitchDetail');
+                Route::get('order', 'order')->name('order');
             });
             Route::controller(AuthController::class)->group(function (){
                 Route::get('logout', 'processAdminLogout')->name('logout');
@@ -64,3 +70,4 @@ Route::middleware('not_admin')->group(function (){
         });
     });
 });
+

@@ -12,4 +12,9 @@ class FootballPitchDetail extends Model
         'image',
         'football_pitch_id',
     ];
+
+    public function createdAt()
+    {
+        return $this->created_at->diffForHumans();
+    }
 }

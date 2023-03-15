@@ -1,0 +1,7 @@
+#external-events .fc-event-main {
+    cursor: move;
+    padding: 3px;
+}
+#calendar a{
+  color: var(--dark-color);
+}

@@ -14,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone', 12);
+            $table->string('name')->nullable();
+            $table->string('phone', 12)->nullable();
             $table->string('email', 50)->nullable();
             $table->unsignedDouble('deposit');
             $table->string('code', 20);

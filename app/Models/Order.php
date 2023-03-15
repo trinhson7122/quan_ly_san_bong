@@ -22,4 +22,9 @@ class Order extends Model
         'user_id',
         'football_pitch_id',
     ];
+
+    public function footballPitch()
+    {
+        return $this->belongsTo(FootballPitch::class, 'football_pitch_id');
+    }
 }

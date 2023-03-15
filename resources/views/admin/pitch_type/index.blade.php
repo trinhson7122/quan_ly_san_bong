@@ -5,16 +5,8 @@
         <div class="pagetitle">
             <h1>Quản lý loại sân</h1>
         </div>
-        {{-- Thông báo khi tác động --}}
-        @if (session()->has('message'))
-            <div class="alert alert-success">{{ session()->get('message') }}</div>
-        @endif
-        {{-- Thông báo khi có lỗi với đầu vào --}}
-        @if ($errors->any())
-            @foreach ($errors->all() as $item)
-                <div class="alert alert-danger">{{ $item }}</div>
-            @endforeach
-        @endif
+        {{ Breadcrumbs::render('pitchType') }}
+        @include('admin.layouts.alert')
         {{-- Body --}}
         <section class="section">
             <div class="card">

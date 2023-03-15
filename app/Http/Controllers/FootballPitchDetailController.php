@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FootballPitchDetail;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class FootballPitchDetailController extends Controller
@@ -25,7 +23,7 @@ class FootballPitchDetailController extends Controller
             'image' => $file_name,
             'football_pitch_id' => $request->input('football_pitch_id'),
         ]);
-        return redirect()->back()->with('success', 'Thêm ảnh thành công');
+        return redirect()->back()->with('message', 'Thêm ảnh thành công');
     }
 
     /**
@@ -36,6 +34,6 @@ class FootballPitchDetailController extends Controller
         $obj = FootballPitchDetail::find($id);
         Storage::disk('public')->delete($obj->image);
         $obj->delete();
-        return redirect()->back()->with('success', 'Xóa ảnh thành công');
+        return redirect()->back()->with('message', 'Xóa ảnh thành công');
     }
 }

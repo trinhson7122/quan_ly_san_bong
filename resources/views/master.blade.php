@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
   <meta charset="utf-8">
@@ -8,6 +8,7 @@
   <title>{{ config('app.name') }} - {{ $title }}</title>
   <meta content="Cho thuê sân đá bóng tiện lợi" name="description">
   <meta content="thue san da bong" name="keywords">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <!-- Favicons -->
   {{-- <link href="assets/img/favicon.png" rel="icon">
@@ -20,22 +21,11 @@
   <!-- Vendor CSS Files -->
   <link href="{{ asset('/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-  <link href="{{ asset('/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('/vendor/quill/quill.snow.css') }}" rel="stylesheet">
-  <link href="{{ asset('/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
-  <link href="{{ asset('/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-  <link href="{{ asset('/vendor/simple-datatables/style.css') }}" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin - v2.5.0
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+  <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -45,22 +35,23 @@
   <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
   <script>
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+    // // Enable pusher logging - don't include this in production
+    // Pusher.logToConsole = true;
 
-    var pusher = new Pusher('70186e1524c4c44a9000', {
-      cluster: 'ap1'
-    });
+    // var pusher = new Pusher('70186e1524c4c44a9000', {
+    //   cluster: 'ap1'
+    // });
 
-    var channel = pusher.subscribe('quanlysanbong-channel');
-    channel.bind('pitchType-updated', function(data) {
-      //alert(1);
-    });
+    // var channel = pusher.subscribe('quanlysanbong-channel');
+    // channel.bind('pitchType-updated', function(data) {
+    //   //alert(1);
+    // });
   </script>
   <!-- Template Main JS File -->
   <script src="{{ asset('js/main.js') }}"></script>
   <script src="{{ asset('js/app.js') }}"></script>
   <script src="{{ asset('js/ajax.js') }}"></script>
+  <script src="{{ asset('js/func.js') }}"></script>
 
 </body>
 

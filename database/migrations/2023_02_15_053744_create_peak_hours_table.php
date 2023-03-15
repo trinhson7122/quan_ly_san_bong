@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('peak_hours', function (Blueprint $table) {
             $table->id();
             $table->time('start_at');
+            $table->time('end_at');
             $table->timestamps();
         });
     }

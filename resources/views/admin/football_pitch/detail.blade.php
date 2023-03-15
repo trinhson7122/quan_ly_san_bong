@@ -5,40 +5,29 @@
         <div class="pagetitle">
             <h1>Chi tiết sân bóng</h1>
         </div>
-        {{-- Thông báo khi tác động --}}
-        @if (session()->has('message'))
-            <div class="alert alert-success">{{ session()->get('message') }}</div>
-        @endif
-        {{-- Thông báo nếu có lỗi đầu vào --}}
-        @if ($errors->any())
-            @foreach ($errors->all() as $item)
-                <div class="alert alert-danger">{{ $item }}</div>
-            @endforeach
-        @endif
+        {{ Breadcrumbs::render('footballPitchDetail') }}
+        @include('admin.layouts.alert')
         {{-- Body --}}
         <section class="section">
             <div class="card">
                 <div class="card-body">
                     {{-- Tiêu đề --}}
-                    <h5 class="card-title @if ($footballPitch['is_maintenance']) text-danger @else text-success @endif">Thông tin
-                        - {{ $footballPitch['name'] }} -
-                        @if ($footballPitch['is_maintenance'])
-                            Đang bảo trì
-                        @else
-                            Đang hoạt động
-                        @endif
-                    </h5>
+                    @if ($footballPitch['is_maintenance'])
+                        <h5 class="card-title text-danger">Thông tin - {{ $footballPitch->name }} -  Đang bảo trì</h5>
+                    @else
+                        <h5 class="card-title text-success">Thông tin - {{ $footballPitch->name }} -  Đang hoạt động</h5>
+                    @endif
                     <div class="row">
                         {{-- Ảnh sân bóng --}}
                         <div class="col-md-6 mb-3">
                             <div id="carouselFootballPitch" class="carousel slide" data-bs-ride="carousel">
-                                @if (count($footballPitchDetails) > 0)
+                                @if ($footballPitchDetails->count() > 0)
                                     <div class="carousel-indicators">
                                         @foreach ($footballPitchDetails as $item)
-                                            <button type="button" data-bs-target="#carouselExampleIndicators"
-                                                data-bs-slide-to="{{ $item['index'] }}"
+                                            <button type="button" data-bs-target="#carouselFootballPitch"
+                                                data-bs-slide-to="{{ $loop->index }}"
                                                 class="@if ($loop->first) active @endif"
-                                                aria-label="Slide {{ $item['index'] + 1 }}"
+                                                aria-label="Slide {{ $loop->index + 1 }}"
                                                 aria-current="@if ($loop->first) true @endif">
                                             </button>
                                         @endforeach
@@ -46,7 +35,7 @@
                                     <div class="carousel-inner">
                                         @foreach ($footballPitchDetails as $item)
                                             <div class="carousel-item @if ($loop->first) active @endif">
-                                                <img src="{{ config('app.image') . $item['image'] }}" class="d-block w-100"
+                                                <img src="{{ config('app.image') . $item->image }}" class="d-block w-100"
                                                     alt="...">
                                             </div>
                                         @endforeach
@@ -104,41 +93,41 @@
                                         <div class="tab-pane fade profile-overview active show" id="football-pitch-overview"
                                             role="tabpanel">
                                             <h5 class="card-title">Mô tả</h5>
-                                            <p class="small fst-italic">{{ $footballPitch['description'] }}</p>
+                                            <p class="small fst-italic">{{ $footballPitch->description }}</p>
 
                                             <h5 class="card-title">Thông tin</h5>
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-4 label">Thời gian bắt đầu - kết thúc</div>
-                                                <div class="col-lg-6 col-md-8">{{ $footballPitch['time_start'] }} -
-                                                    {{ $footballPitch['time_end'] }}</div>
+                                                <div class="col-lg-6 col-md-8">{{ $footballPitch->timeStart() }} -
+                                                    {{ $footballPitch->timeEnd() }}</div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-4 label">Số người</div>
-                                                <div class="col-lg-6 col-md-8">{{ $footballPitch['pitch_type'] }}</div>
+                                                <div class="col-lg-6 col-md-8">{{ $footballPitch->pitchType->quantity }}</div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-4 label">Giá / giờ</div>
-                                                <div class="col-lg-6 col-md-8">{{ $footballPitch['price_per_hour'] }}</div>
+                                                <div class="col-lg-6 col-md-8">{{ $footballPitch->pricePerHour() }}</div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-4 label">Giá / giờ cao điểm</div>
-                                                <div class="col-lg-6 col-md-8">{{ $footballPitch['price_per_peak_hour'] }}
+                                                <div class="col-lg-6 col-md-8">{{ $footballPitch->pricePerPeakHour() }}
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-4 label">Sân liên kết</div>
-                                                <div class="col-lg-6 col-md-8">{{ $footballPitch['link_football_pitch'] }}
+                                                <div class="col-lg-6 col-md-8">{{ $footballPitch->nameFootBallPitchLink() }}
                                                 </div>
                                             </div>
 
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-4 label">Tạo lúc</div>
-                                                <div class="col-lg-6 col-md-8">{{ $footballPitch['created_at'] }}</div>
+                                                <div class="col-lg-6 col-md-8">{{ $footballPitch->createdAt() }}</div>
                                             </div>
 
                                         </div>
@@ -154,12 +143,12 @@
                                                 <tbody>
                                                     @foreach ($footballPitchDetails as $item)
                                                         <tr>
-                                                            <td><img src="{{ config('app.image') . $item['image'] }}"
+                                                            <td><img src="{{ config('app.image') . $item->image }}"
                                                                     width="100" alt="..."></td>
-                                                            <td>Thêm lúc: {{ $item['created_at'] }}</td>
+                                                            <td>Thêm lúc: {{ $item->createdAt() }}</td>
                                                             <td>
                                                                 <form
-                                                                    action="{{ route('footballPitchDetail.destroy', $item['id']) }}"
+                                                                    action="{{ route('footballPitchDetail.destroy', $item->id) }}"
                                                                     method="post">
                                                                     @csrf
                                                                     @method('delete')
@@ -174,7 +163,8 @@
                                         </div>
                                         {{-- thông tin tab chỉnh sửa --}}
                                         <div class="tab-pane fade pt-3" id="football-pitch-edit" role="tabpanel">
-                                            <form action="{{ route('footballPitch.update', $footballPitch['id']) }}" method="POST">
+                                            <form action="{{ route('footballPitch.update', $footballPitch->id) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="row mb-3">
@@ -183,7 +173,7 @@
                                                     </label>
                                                     <div class="col-sm-8">
                                                         <input required type="text" name="name"
-                                                            class="form-control" value="{{ $footballPitch['name'] }}">
+                                                            class="form-control" value="{{ $footballPitch->name }}">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -192,10 +182,12 @@
                                                         <select name="time_start" class="form-select"
                                                             aria-label="Default select example">
                                                             @for ($i = 1; $i <= 24; $i++)
-                                                                @if (explode(':', $footballPitch['raw_time_start'])[0] == $i)
-                                                                  <option selected value="{{ $i }}:00:00">{{ $i }}:00:00</option>
+                                                                @if (explode(':', $footballPitch->time_start)[0] == $i)
+                                                                    <option selected value="{{ $i }}:00:00">
+                                                                        {{ $i }}:00:00</option>
                                                                 @else
-                                                                  <option value="{{ $i }}:00:00">{{ $i }}:00:00</option>
+                                                                    <option value="{{ $i }}:00:00">
+                                                                        {{ $i }}:00:00</option>
                                                                 @endif
                                                             @endfor
                                                         </select>
@@ -205,10 +197,12 @@
                                                         <select name="time_end" class="form-select"
                                                             aria-label="Default select example">
                                                             @for ($i = 1; $i <= 24; $i++)
-                                                                @if (explode(':', $footballPitch['raw_time_end'])[0] == $i)
-                                                                  <option selected value="{{ $i }}:00:00">{{ $i }}:00:00</option>
+                                                                @if (explode(':', $footballPitch->time_end)[0] == $i)
+                                                                    <option selected value="{{ $i }}:00:00">
+                                                                        {{ $i }}:00:00</option>
                                                                 @else
-                                                                  <option value="{{ $i }}:00:00">{{ $i }}:00:00</option>
+                                                                    <option value="{{ $i }}:00:00">
+                                                                        {{ $i }}:00:00</option>
                                                                 @endif
                                                             @endfor
                                                         </select>
@@ -223,7 +217,7 @@
                                                             aria-label="Default select example">
                                                             @foreach ($pitchTypes as $item)
                                                                 <option value="{{ $item->id }}"
-                                                                    @if ($footballPitch['pitch_type_id'] == $item->id) selected @endif>
+                                                                    @if ($footballPitch->pitch_type_id == $item->id) selected @endif>
                                                                     {{ $item->quantity }} ({{ $item->description }})
                                                                 </option>
                                                             @endforeach
@@ -235,8 +229,8 @@
                                                         Giá theo giờ <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-sm-8">
-                                                        <input required value="{{ $footballPitch['raw_price_per_hour'] }}" type="number"
-                                                            name="price_per_hour" class="form-control">
+                                                        <input required value="{{ $footballPitch->price_per_hour }}"
+                                                            type="number" name="price_per_hour" class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -244,8 +238,10 @@
                                                         Giá theo giờ cao điểm <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-sm-8">
-                                                        <input required value="{{ $footballPitch['raw_price_per_peak_hour'] }}" type="number"
-                                                            name="price_per_peak_hour" class="form-control">
+                                                        <input required
+                                                            value="{{ $footballPitch->price_per_peak_hour }}"
+                                                            type="number" name="price_per_peak_hour"
+                                                            class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -253,7 +249,7 @@
                                                         Mô tả
                                                     </label>
                                                     <div class="col-sm-8">
-                                                        <textarea type="text" name="description" class="form-control">{{ $footballPitch['description'] }}</textarea>
+                                                        <textarea type="text" name="description" class="form-control">{{ $footballPitch->description }}</textarea>
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
@@ -267,8 +263,9 @@
                                                                 aria-label="Default select example">
                                                                 <option value="" selected></option>
                                                                 @foreach ($footballPitches as $item)
-                                                                    <option value="{{ $item['id'] }}" @if($item['id'] == $footballPitch['from_football_pitch_id']) selected @endif>
-                                                                        {{ $item['name'] }} (#{{ $item['id'] }})
+                                                                    <option value="{{ $item->id }}"
+                                                                        @if ($item->id == $footballPitch->from_football_pitch_id) selected @endif>
+                                                                        {{ $item->name }} (#{{ $item->id }})
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -279,8 +276,9 @@
                                                                 aria-label="Default select example">
                                                                 <option value="" selected></option>
                                                                 @foreach ($footballPitches as $item)
-                                                                    <option value="{{ $item['id'] }}" @if($item['id'] == $footballPitch['to_football_pitch_id']) selected @endif>
-                                                                        {{ $item['name'] }} (#{{ $item['id'] }})
+                                                                    <option value="{{ $item->id }}"
+                                                                        @if ($item->id == $footballPitch->to_football_pitch_id) selected @endif>
+                                                                        {{ $item->name }} (#{{ $item->id }})
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -288,7 +286,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="text-center">
-                                                  <button type="submit" class="btn btn-warning">Cập nhật</button>
+                                                    <button type="submit" class="btn btn-warning">Cập nhật</button>
                                                 </div>
                                             </form>
 
@@ -322,7 +320,7 @@
                                     Tải ảnh lên
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="hidden" name="football_pitch_id" value="{{ $footballPitch['id'] }}">
+                                    <input type="hidden" name="football_pitch_id" value="{{ $footballPitch->id }}">
                                     <input required type="file" name="image" class="form-control">
                                 </div>
                             </div>

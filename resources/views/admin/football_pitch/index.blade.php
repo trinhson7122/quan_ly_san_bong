@@ -5,15 +5,8 @@
         <div class="pagetitle">
             <h1>Quản lý sân bóng</h1>
         </div>
-        {{-- Thông báo khi tác động --}}
-        @if (session()->has('message'))
-            <div class="alert alert-success">{{ session()->get('message') }}</div>
-        @endif
-        @if ($errors->any())
-            @foreach ($errors->all() as $item)
-                <div class="alert alert-danger">{{ $item }}</div>
-            @endforeach
-        @endif
+        {{ Breadcrumbs::render('footballPitch') }}
+        @include('admin.layouts.alert')
         {{-- Body --}}
         <section class="section">
             <div class="card">
@@ -38,13 +31,13 @@
                         <tbody>
                             @foreach ($footballPitches as $item)
                                 <tr>
-                                    <td>{{ $item['id'] }}</td>
-                                    <td>{{ $item['name'] }}</td>
-                                    <td>{{ $item['pitch_type'] }}</td>
-                                    <td>{{ $item['time_start'] }}</td>
-                                    <td>{{ $item['time_end'] }}</td>
-                                    <td>{{ $item['price_per_hour'] }}</td>
-                                    <td>{{ $item['price_per_peak_hour'] }}</td>
+                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->name }}</td>
+                                    <td>{{ $item->pitchType->quantity }}</td>
+                                    <td>{{ $item->timeStart() }}</td>
+                                    <td>{{ $item->timeEnd() }}</td>
+                                    <td>{{ $item->pricePerHour() }}</td>
+                                    <td>{{ $item->pricePerPeakHour() }}</td>
                                     <td>
                                         @if ($item['is_maintenance'])
                                             <div class="text-danger">Bảo trì</div>
