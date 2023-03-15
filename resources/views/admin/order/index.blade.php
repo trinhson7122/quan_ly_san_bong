@@ -19,8 +19,8 @@
                             </p>
                               
                               @foreach ($footballPitches as $item)
-                                <div data-football_pitch_id="{{ $item['id'] }}" class='mb-1 p-1 fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-                                    <div class='fc-event-main'>{{ $item['name'] }}</div>
+                                <div data-football_pitch_id="{{ $item->id }}" class='mb-1 p-1 fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+                                    <div class='fc-event-main'>{{ $item->name . ' - ' .  $item->pitchType->quantity }} người</div>
                                 </div>
                               @endforeach
                         </div>

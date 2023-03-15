@@ -71,16 +71,9 @@ class AdminController extends Controller
             'name',
             'pitch_type_id',
         ]);
-        $arr_fp = [];
-        foreach($footballPitches as $item){
-            array_push($arr_fp, [
-                'id' => $item->id,
-                'name' => $item->name . '(' . $item->pitchType->quantity . 'người)',
-            ]);
-        }
         return view('admin.order.index', [
             'title' => $title,
-            'footballPitches' => $arr_fp,
+            'footballPitches' => $footballPitches,
         ]);
     }
 }
