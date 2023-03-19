@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\FootballPitch;
 use App\Models\FootballPitchDetail;
 use App\Models\PitchType;
-use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -62,7 +61,7 @@ class AdminController extends Controller
             'footballPitches' => $footballPitches,
         ]);
     }
-
+    //yeu cau
     public function order()
     {
         $title = 'Order';

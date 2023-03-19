@@ -26,19 +26,23 @@ document.addEventListener("DOMContentLoaded", function () {
     // -----------------------------------------------------------------
 
     var calendar = new Calendar(calendarEl, {
-        initialView: "timeGridWeek",
+        initialView: "dayGridMonth",
         timeZone: "Asia/Ho_Chi_Minh",
         headerToolbar: {
             left: "prev,next today",
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay,listDay",
         },
+        visibleRange: {
+            start: '2020-03-22',
+            end: '2020-03-25'
+          },
         buttonText: {
             month: "Tháng",
             week: "Tuần",
             day: "Ngày",
             list: "Danh sách",
-            today: "hôm nay",
+            today: "Hôm nay",
         },
         timeZone: "local",
         locale: "vi",
@@ -64,8 +68,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 dataType: "json",
                 success: function (response) {
+                    console.log(response);
                     info.event.setProp("id", response.data.id);
+                    $.toast({
+                        heading: 'Thành công',
+                        text: response.message,
+                        showHideTransition: 'plain',
+                        icon: response.status,
+                        position: 'bottom-right',
+                    });
                 },
+                error: function (response) {
+                    console.log(response);
+                    response = response.responseJSON;
+                    $.toast({
+                        heading: 'Thất bại',
+                        text: response.message,
+                        showHideTransition: 'plain',
+                        icon: response.status,
+                        position: 'bottom-right',
+                    });
+                }
             });
         },
         eventClick: function (info) {

@@ -43,7 +43,7 @@ class PitchTypeController extends Controller
         ]);
         $pitchType = PitchType::find($id);
         $pitchType->update($validated);
-        //event(new PitchTypeChangeEvent($pitchType, 'pitchType-updated'));
+        event(new PitchTypeChangeEvent($pitchType, 'pitchType-updated'));
         return to_route('admin.pitchType')->with('message', 'Cập nhật loại sân thành công');
     }
 

@@ -49,21 +49,3 @@ function updateTimeOrder(start, end, id)
 //     });
 //     return data;
 // }
-
-function updateOrder(id, data)
-{
-    $.ajax({
-        type: "put",
-        url: location.origin + '/api/order/' + id,
-        data: {
-            start_at: start,
-            end_at: end,
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            _method: "PUT"
-        },
-        dataType: "json",
-        success: function (response) {
-            
-        }
-    });
-}

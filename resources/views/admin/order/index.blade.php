@@ -41,7 +41,7 @@
                 <form data-id="0" method="POST">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="type" value="update_order">
+                    <input type="hidden" name="type" value="update_info">
                     <div class="modal-header bg-warning">
                         <h5 class="modal-title">Cập nhật yêu cầu</h5> 
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
