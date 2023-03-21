@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Stringable;
+use Termwind\Components\Dd;
 
 class OrderController extends Controller
 {
@@ -22,12 +23,20 @@ class OrderController extends Controller
             getTimeLaravel($request->start),
             getTimeLaravel($request->end),
         ];
-        $orders = Order::query()->whereBetween('start_at', $arrInTime)->get();
+        $orders = Order::query()->with('footballPitch')->whereBetween('start_at', $arrInTime)->get(
+            [
+                'id',
+                'football_pitch_id',
+                'name',
+                'end_at',
+                'start_at',
+            ]
+        );
         $arr = [];
         foreach ($orders as $order) {
             $arr[] = [
                 'id' => $order->id,
-                'title' => $order->footballPitch->name . ' - ' . $order->name,
+                'title' => $order->footballPitch->name . ' : ' . $order->name,
                 'start' => $order->start_at,
                 'end' => $order->end_at,
                 'extendedProps' => [
@@ -43,20 +52,23 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        //kiểm tra đầu vào
         $validated = $request->validate([
             'start_at' => 'required',
             'end_at' => 'required',
             'football_pitch_id' => 'required|exists:football_pitches,id',
         ]);
+        //lấy thời gian bắt đầu và kết thúc của ngày hôm nay
         $end_of_day = (new Carbon('now'))->endOfDay();
         $start_of_day = (new Carbon('now'))->startOfDay();
         $arrInTime = [
             getTimeLaravel($start_of_day),
             getTimeLaravel($end_of_day),
         ];
-        //
+        //tìm những sân đang được đặt trong hôm nay
         $orders = Order::query()->where('football_pitch_id', $validated['football_pitch_id'])
             ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
+        //nếu sân yêu cầu đã được đặt trong thời gian đó rồi thì trả về lỗi
         foreach ($orders as $item) {
             if (isOrderInTime($validated['start_at'], $validated['end_at'], $item->start_at, $item->end_at)) {
                 return response()->json([
@@ -65,7 +77,7 @@ class OrderController extends Controller
                 ], Response::HTTP_BAD_REQUEST);
             }
         }
-        //
+        //tìm xem sân đang yêu cầu có đang liên kết với sân nào không, có thì trả về lỗi
         $football_pitch = FootballPitch::find($validated['football_pitch_id']);
         if ($football_pitch->from_football_pitch_id && $football_pitch->to_football_pitch_id) {
             $order_with_football_pitch_links = Order::query()->where('football_pitch_id', $football_pitch->from_football_pitch_id)
@@ -79,9 +91,24 @@ class OrderController extends Controller
                     ], Response::HTTP_BAD_REQUEST);
                 }
             }
+        } else {
+            $orders = Order::query()
+                ->join('football_pitches', 'football_pitches.id', '=', 'orders.football_pitch_id')
+                ->where('football_pitches.from_football_pitch_id', '=', $validated['football_pitch_id'])
+                ->orWhere('football_pitches.to_football_pitch_id', '=', $validated['football_pitch_id'])
+                ->get([
+                    'start_at', 'end_at'
+                ]);
+            foreach ($orders as $item) {
+                if (isOrderInTime($validated['start_at'], $validated['end_at'], $item->start_at, $item->end_at)) {
+                    return response()->json([
+                        'message' => 'Sân liên kết đang trong thời gian hoạt động',
+                        'status' => 'error'
+                    ], Response::HTTP_BAD_REQUEST);
+                }
+            }
         }
-        //
-        $football_pitch = FootballPitch::find($validated['football_pitch_id']);
+        //nếu không có lỗi gì thì thêm yêu cầu mới vào
         $peak_hour = PeakHour::all()->firstOrFail();
         $total_price = getPriceOrder([
             'time_start' => $peak_hour->start_at,
@@ -132,6 +159,61 @@ class OrderController extends Controller
                         'start_at' => 'nullable',
                         'end_at' => 'nullable',
                     ]);
+                    //lấy thời gian bắt đầu và kết thúc của ngày hôm nay
+                    $end_of_day = (new Carbon('now'))->endOfDay();
+                    $start_of_day = (new Carbon('now'))->startOfDay();
+                    $arrInTime = [
+                        getTimeLaravel($start_of_day),
+                        getTimeLaravel($end_of_day),
+                    ];
+                    //tìm những sân đang được đặt trong hôm nay
+                    $orders = Order::query()->where('football_pitch_id', $order->football_pitch_id)
+                        ->where('id', '!=', $order->id)
+                        ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
+                    //nếu sân yêu cầu đã được đặt trong thời gian đó rồi thì trả về lỗi
+                    foreach ($orders as $item) {
+                        if (isOrderInTime($validated['start_at'], $validated['end_at'], $item->start_at, $item->end_at)) {
+                            return response()->json([
+                                'message' => 'Thời gian đã tồn tại trong hệ thống',
+                                'status' => 'error'
+                            ], Response::HTTP_BAD_REQUEST);
+                        }
+                    }
+                    //tìm xem sân đang yêu cầu có đang liên kết với sân nào không, có thì trả về lỗi
+                    $football_pitch = FootballPitch::find($order->football_pitch_id);
+                    if ($football_pitch->from_football_pitch_id && $football_pitch->to_football_pitch_id) {
+                        $order_with_football_pitch_links = Order::query()->where('football_pitch_id', $football_pitch->from_football_pitch_id)
+                            ->orWhere('football_pitch_id', $football_pitch->to_football_pitch_id)
+                            ->where('id', '!=', $order->id)
+                            ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
+                        foreach ($order_with_football_pitch_links as $item) {
+                            if (isOrderInTime($validated['start_at'], $validated['end_at'], $item->start_at, $item->end_at)) {
+                                return response()->json([
+                                    'message' => 'Sân liên kết đang trong thời gian hoạt động',
+                                    'status' => 'error'
+                                ], Response::HTTP_BAD_REQUEST);
+                            }
+                        }
+                    } else {
+                        $orders = Order::query()
+                            ->join('football_pitches', 'football_pitches.id', '=', 'orders.football_pitch_id')
+                            ->where('orders.id', '!=', $order->id)
+                            ->where('football_pitches.from_football_pitch_id', '=', $order->football_pitch_id)
+                            ->orWhere('football_pitches.to_football_pitch_id', '=', $order->football_pitch_id)
+                            ->get([
+                                'start_at', 'end_at'
+                            ]);
+                        foreach ($orders as $item) {
+                            if (isOrderInTime($validated['start_at'], $validated['end_at'], $item->start_at, $item->end_at)) {
+                                return response()->json([
+                                    'message' => 'Sân liên kết đang trong thời gian hoạt động',
+                                    'status' => 'error'
+                                ], Response::HTTP_BAD_REQUEST);
+                            }
+                        }
+                    }
+
+                    //cap nhat
                     $arr = [];
                     if ($request->has('start_at')) {
                         $arr['start_at'] = getTimeLaravel($validated['start_at']);
@@ -164,7 +246,11 @@ class OrderController extends Controller
                     ]);
                     $validated[] = ['status' => OrderStatusEnum::Finish];
                     $order->update($validated);
-                    return redirect()->back()->with('message', 'Yêu cầu đã được cập nhật hoàn tất');
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Yêu cầu đã được cập nhật hoàn tất',
+                    ], Response::HTTP_OK);
+                    //return redirect()->back()->with('message', 'Yêu cầu đã được cập nhật hoàn tất');
                     break;
             }
         }

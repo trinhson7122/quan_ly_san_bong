@@ -42,7 +42,7 @@ class AdminController extends Controller
     public function footballPitchDetail(string $id)
     {
         $title = 'Football Pitch Detail';
-        $footballPitchDetails = FootballPitchDetail::query()->where('football_pitch_id', $id)->get();
+        $footballPitchDetails = FootballPitchDetail::query()->where('football_pitch_id', '=', $id)->get();
         $footballPitch = FootballPitch::query()->with('pitchType')
             ->with('toFootballPitch')
             ->with('fromFootballPitch')->find($id);
