@@ -4,7 +4,7 @@
 ### Công nghệ sử dụng
 - HTML5, CSS3, Bootstrap4 , Javascript, PHP 8.1, Laravel 9, Jquery.
 - MySQL
-- Pusher (Realtime)
+- Pusher (Realtime Notification)
 
 ### Đối tượng sử dụng
 - Khách hàng chưa có tài khoản
