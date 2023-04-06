@@ -10,6 +10,15 @@ use Illuminate\Http\Response;
 
 class FootballPitchController extends Controller
 {
+    public function index()
+    {
+        $footballPitches = FootballPitch::query()->with('pitchType')->get();
+        $footballPitches->map(function ($footballPitch) {
+            $footballPitch->time_start = timeForHumans($footballPitch->time_start);
+            $footballPitch->time_end = timeForHumans($footballPitch->time_end);
+        });
+        return response()->json(['data' => $footballPitches]);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -33,11 +42,14 @@ class FootballPitchController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(string $id)
     {
         $obj = FootballPitch::find($id);
         $obj->delete();
-        return to_route('admin.footballPitch')->with('message', 'Xóa sân bóng thành công');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Xóa sân bóng thành công',
+        ]);
     }
 
     public function maintenance(string $id, Request $request)
@@ -48,6 +60,9 @@ class FootballPitchController extends Controller
         ]);
         $obj->is_maintenance = $request->is_maintenance;
         $obj->save();
-        return to_route('admin.footballPitch')->with('message', 'Cập nhật tình trạng sân bóng thành công');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cập nhật trạng thái bảo trì của sân thành công',
+        ]);
     }
 }

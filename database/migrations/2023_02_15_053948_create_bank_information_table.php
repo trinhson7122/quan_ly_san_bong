@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('bank');
             $table->string('note')->nullable();
             $table->string('image')->nullable();
+            $table->boolean('isShow')->default(false);
             $table->timestamps();
         });
     }

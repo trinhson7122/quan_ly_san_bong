@@ -30,18 +30,25 @@
         </a>
         <ul id="order-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('admin.order') }}">
+            <a class="nav-link collapsed" href="{{ route('admin.orderCalendar') }}">
               <i class="bi bi-circle"></i>
               <span>Quản lý yêu cầu - lịch</span>
             </a>
           </li>
-          <li>
-            <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Quản lý yêu cầu - bảng</span>
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ route('admin.orderTable') }}">
+              <i class="bi bi-circle"></i>
+              <span>Quản lý yêu cầu - bảng</span>
             </a>
           </li>
         </ul>
       </li><!-- End Components Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('admin.bankInformation') }}">
+          <i class="bi bi-grid"></i>
+          <span>Quản lý thông tin thanh toán</span>
+        </a>
+      </li>
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">

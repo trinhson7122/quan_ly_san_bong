@@ -30,15 +30,31 @@ class OrderController extends Controller
                 'name',
                 'end_at',
                 'start_at',
+                'status',
             ]
         );
         $arr = [];
+        $bg_color = [
+            'wait' => '',
+            'finish' => '#198754',
+            'cancel' => '#dc3545',
+            'running' => '#8fdf82'
+        ];
         foreach ($orders as $order) {
+            $color = '';
+            $color = match($order->status) {
+                OrderStatusEnum::Wait => $bg_color['wait'],
+                OrderStatusEnum::Finish => $bg_color['running'],
+                OrderStatusEnum::Cancel => $bg_color['cancel'],
+                OrderStatusEnum::Paid => $bg_color['finish'],
+                default => $color,
+            };
             $arr[] = [
                 'id' => $order->id,
                 'title' => $order->footballPitch->name . ' : ' . $order->name,
                 'start' => $order->start_at,
                 'end' => $order->end_at,
+                'backgroundColor' => $color,
                 'extendedProps' => [
                     'football_pitch_id' => $order->footballPitch->id,
                 ]
@@ -46,7 +62,13 @@ class OrderController extends Controller
         }
         return response()->json($arr);
     }
-
+    public function index()
+    {
+        $order = Order::query()->with('footballPitch')->get();
+        return response()->json([
+            'data' => $order,
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -107,6 +129,20 @@ class OrderController extends Controller
                     ], Response::HTTP_BAD_REQUEST);
                 }
             }
+        }
+        //kiểm tra xem thời gian đó có phải lúc sân đang mở không
+        $time_start = explode(' ', getTimeLaravel($validated['start_at']))[1];
+        $time_end = explode(' ', getTimeLaravel($validated['end_at']))[1];
+        if (!isOrderInTime(
+            $time_start,
+            $time_end,
+            $football_pitch->time_start,
+            $football_pitch->time_end
+        )) {
+            return response()->json([
+                'message' => 'Thời gian bạn đặt sân chưa mở',
+                'status' => 'error'
+            ], Response::HTTP_BAD_REQUEST);
         }
         //nếu không có lỗi gì thì thêm yêu cầu mới vào
         $peak_hour = PeakHour::all()->firstOrFail();
@@ -212,6 +248,20 @@ class OrderController extends Controller
                             }
                         }
                     }
+                    //kiểm tra xem thời gian đó có phải lúc sân đang mở không
+                    $time_start = explode(' ', getTimeLaravel($validated['start_at']))[1];
+                    $time_end = explode(' ', getTimeLaravel($validated['end_at']))[1];
+                    if (!isOrderInTime(
+                        $time_start,
+                        $time_end,
+                        $football_pitch->time_start,
+                        $football_pitch->time_end
+                    )) {
+                        return response()->json([
+                            'message' => 'Thời gian bạn đặt sân chưa mở',
+                            'status' => 'error'
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
 
                     //cap nhat
                     $arr = [];
@@ -243,13 +293,24 @@ class OrderController extends Controller
                         'phone' => 'required|numeric',
                         'email' => 'nullable|email',
                         'deposit' => 'required|numeric',
+                        'note' => 'nullable|string',
                     ]);
-                    $validated[] = ['status' => OrderStatusEnum::Finish];
+                    $validated['status'] = OrderStatusEnum::Finish;
                     $order->update($validated);
+                    $arr = [
+                        'id' => $order->id,
+                        'title' => $order->footballPitch->name . ' : ' . $order->name,
+                        'start' => $order->start_at,
+                        'end' => $order->end_at,
+                        'extendedProps' => [
+                            'football_pitch_id' => $order->footballPitch->id,
+                        ]
+                    ];
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Yêu cầu đã được cập nhật hoàn tất',
-                    ], Response::HTTP_OK);
+                        'data' => $arr
+                    ]);
                     //return redirect()->back()->with('message', 'Yêu cầu đã được cập nhật hoàn tất');
                     break;
             }
@@ -265,5 +326,13 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function paid(string $id)
+    {
+        $obj = Order::find($id);
+        $obj->status = OrderStatusEnum::Paid;
+        $obj->save();
+        return redirect()->back()->with('message', 'Thanh toán thành công');
     }
 }

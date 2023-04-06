@@ -31,8 +31,18 @@ Breadcrumbs::for('footballPitchDetail', function ($trail) {
     $trail->push('Thông tin sân bóng');
 });
 
-//Home > Yêu cầu
-Breadcrumbs::for('order', function ($trail) {
+//Home > Yêu cầu lịch
+Breadcrumbs::for('orderCalendar', function ($trail) {
     $trail->parent('home');
-    $trail->push('Yêu cầu');
+    $trail->push('Yêu cầu lịch', route('admin.orderCalendar'));
+});
+//Home > Yêu cầu bảng
+Breadcrumbs::for('orderTable', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Yêu cầu bảng');
+});
+//Home > Yêu cầu lịch > thanh toán
+Breadcrumbs::for('orderCheckout', function ($trail) {
+    $trail->parent('orderCalendar');
+    $trail->push('Thanh toán');
 });

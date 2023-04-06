@@ -1,3 +1,4 @@
+var calendar = null;
 document.addEventListener("DOMContentLoaded", function () {
     var Calendar = FullCalendar.Calendar;
     var Draggable = FullCalendar.Draggable;
@@ -24,12 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // initialize the calendar
     // -----------------------------------------------------------------
 
-    var calendar = new Calendar(calendarEl, {
+    calendar = new Calendar(calendarEl, {
         initialView: "dayGridMonth",
         timeZone: "Asia/Ho_Chi_Minh",
         nowIndicator: true,
         navLinks: true,
-        lazyFetching: true, // false neu muong cap nhat du lieu khi chuyen tab
+        lazyFetching: false, // false neu muong cap nhat du lieu khi chuyen tab
         headerToolbar: {
             left: "prev,next today",
             center: "title",
@@ -48,22 +49,23 @@ document.addEventListener("DOMContentLoaded", function () {
         eventMaxStack: 7,
         dayMaxEvents: true,
         droppable: true,
-        events: location.origin + "/api/order",
+        events: BASE_URL_API.getOrder,
         eventReceive: function (info) {
             $.ajax({
                 type: "post",
-                url: location.origin + "/api/order",
+                url: BASE_URL_API.postOrder,
                 data: {
                     start_at: info.event.startStr,
                     end_at: info.event.endStr,
                     football_pitch_id:
                         info.event.extendedProps.football_pitch_id,
-                    _token: $('meta[name="csrf-token"]').attr("content"),
+                    _token: CSRF_TOKEN,
                     _method: "POST",
                 },
                 dataType: "json",
                 success: function (response) {
                     info.event.setProp("id", response.data.id);
+                    console.log(info.event);
                     $.toast({
                         heading: "Thành công",
                         text: response.message,
@@ -88,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
         eventClick: function (info) {
             $.ajax({
                 type: "get",
-                url: location.origin + "/api/order/" + info.event.id,
+                url: BASE_URL_API.showOrder + info.event.id,
                 success: function (response) {
                     $("#update-order-modal input[name='name']").val(
                         response.data.name
@@ -102,6 +104,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     $("#update-order-modal input[name='deposit']").val(
                         response.data.deposit
                     );
+                    let btn = $("#update-order-modal #checkout")[0];
+                    let href = btn.href;
+                    let arr = href.split('/');
+                    arr[arr.length - 1] = info.event.id;
+                    href = arr.toString().replaceAll(',', '/');
+                    btn.href = href;
                     //console.log(response);
                 },
             });
@@ -109,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#update-order-modal").modal("show");
         },
         eventChange: function (info) {
-            console.log(info);
+            //console.log(info);
             if (
                 info.event.startStr != info.oldEvent.startStr ||
                 info.event.endStr != info.oldEvent.endStr
@@ -120,14 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (submit) {
                     $.ajax({
                         type: "post",
-                        url: location.origin + "/api/order/" + info.event.id,
+                        url: BASE_URL_API.updateOrder + info.event.id,
                         data: {
                             type: "update_time",
                             start_at: info.event.startStr,
                             end_at: info.event.endStr,
-                            _token: $('meta[name="csrf-token"]').attr(
-                                "content"
-                            ),
+                            _token: CSRF_TOKEN,
                             _method: "PUT",
                         },
                         dataType: "json",
@@ -162,11 +168,10 @@ document.addEventListener("DOMContentLoaded", function () {
     calendar.render();
 
     $(document).on('click', '.btn-update-order', function () {
-        const form = $("#update-order-modal form");
-        //form.submit();
+        const form = $(this).parents('form');
         $.ajax({
             type: "post",
-            url: location.origin + "/api/order/" + form.data('id'),
+            url: BASE_URL_API.updateOrder + form[0].dataset.id,
             data: form.serialize(),
             dataType: "json",
             success: function (response) {
@@ -177,7 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     icon: response.status,
                     position: "bottom-right",
                 });
-                calendar.refetchEvents();
+                calendar.getEventById(form[0].dataset.id).setProp('title', response.data.title)
+                calendar.getEventById(form[0].dataset.id).setProp('backgroundColor', '#8fdf82')
+                //calendar.removeAllEvents();
+                //calendar.refetchEvents();
                 $('#update-order-modal').modal('hide');
             },
             error: function (response) {

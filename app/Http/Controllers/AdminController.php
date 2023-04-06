@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnum;
 use App\Models\FootballPitch;
 use App\Models\FootballPitchDetail;
+use App\Models\Order;
 use App\Models\PitchType;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -61,8 +64,8 @@ class AdminController extends Controller
             'footballPitches' => $footballPitches,
         ]);
     }
-    //yeu cau
-    public function order()
+    //yeu cau lich
+    public function orderCalendar()
     {
         $title = 'Order';
         $footballPitches = FootballPitch::query()->where('is_maintenance', 0)->with('pitchType')->get([
@@ -70,9 +73,57 @@ class AdminController extends Controller
             'name',
             'pitch_type_id',
         ]);
-        return view('admin.order.index', [
+        return view('admin.order.calendar', [
             'title' => $title,
             'footballPitches' => $footballPitches,
+        ]);
+    }
+    //yeu cau bang
+    public function orderTable()
+    {
+        $title = 'Order';
+        return view('admin.order.table', [
+            'title' => $title,
+        ]);
+    }
+    //thanh toan
+    public function checkout(string $id)
+    {
+        $order = Order::query()->with('footballPitch')->find($id);
+        if (!$order) {
+            abort(404); 
+        }
+        $start_at = new Carbon($order->start_at);
+        $end_at = new Carbon($order->end_at);
+        $h = (int)($start_at->diffInMinutes($end_at) / 60);
+        $m = $start_at->diffInMinutes($end_at) % 60;
+        $totalTime = "$h giờ $m phút";
+        $arr = [];
+        $isCheckout = ($order->status == OrderStatusEnum::Paid) ? true : false;
+        if ($isCheckout) {
+            $arr['status'] = 'success';
+            $arr['message'] = 'Đã thanh toán';
+        }
+        else {
+            $arr['status'] = 'danger';
+            $arr['message'] = 'Chưa thanh toán';
+        }
+        //dd($order->status);
+        $title = "Checkout";
+        return view('admin.order.checkout', [
+            'title' => $title,
+            'order' => $order,
+            'totalTime' => $totalTime,
+            'arr' => $arr,
+            'isCheckout' => $isCheckout,
+        ]);
+    }
+    //thong tin ngan hang
+    public function bankInformation()
+    {
+        $title = 'Bank information';
+        return view('admin.bank_info.index', [
+            'title' => $title,
         ]);
     }
 }
