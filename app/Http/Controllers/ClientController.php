@@ -13,10 +13,10 @@ class ClientController extends Controller
     public function index()
     {
         $title = "Trang chủ";
-        $topFootballPitches = DB::table('orders')
-            ->where('status', OrderStatusEnum::Finish)
-            ->groupBy('football_pitch_id')
-    ->selectRaw("football_pitch_id, count(football_pitch_id) as test")->get();
+        // $topFootballPitches = DB::table('orders')
+        //     ->where('status', OrderStatusEnum::Finish)
+        //     ->groupBy('football_pitch_id')
+        //     ->selectRaw("football_pitch_id, count(football_pitch_id) as test")->get();
             //->get(['football_pitch_id']);
         // $topFootballPitches = Order::query()->where('status', OrderStatusEnum::Finish)
         //     ->where('status', OrderStatusEnum::Finish)
@@ -25,11 +25,12 @@ class ClientController extends Controller
         //     ->count('id');
             //->get(['aggregate', 'football_pitch_id']);
         //dd($topFootballPitches);
-        $footballPitches = FootballPitch::query()->with('pitchType')->get();
+        $footballPitches = FootballPitch::query()->with('pitchType')->with('images')->get();
+        //dd($footballPitches->find(3)->images->count());
         return view('client.home.index', [
             'title' => $title,
             'footballPitches' => $footballPitches,
-            'topFootballPitches' => $topFootballPitches,
+            //'topFootballPitches' => $topFootballPitches,
         ]);
     }
 }

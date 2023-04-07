@@ -101,7 +101,9 @@ $(document).ready(function () {
                         case 1:
                             return `<div class="text-warning">Chờ</div>`;
                         case 2:
-                            return `<div class="text-success">Thành công</div>`;
+                            return `<div class="text-running">Đang đá</div>`;
+                        case 3:
+                            return `<div class="text-success">Đã thanh toán</div>`;
                     }
                 },
             },
@@ -116,7 +118,7 @@ $(document).ready(function () {
             {
                 data: "id",
                 render: function (data, type, row) {
-                    const btn = `<a href="#" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>`;
+                    const btn = `<button data-id="${data}" class="btn btn-danger btn-delete-order"><i class="bi bi-trash-fill"></i></button>`;
                     return btn;
                 },
                 orderable: false,
@@ -136,7 +138,9 @@ $(document).ready(function () {
                     if (!data) {
                         return ``;
                     }
-                    const btn = `<img width=70 src="${URL_IMAGE + data}" alt="photo">`;
+                    const btn = `<img width=70 src="${
+                        URL_IMAGE + data
+                    }" alt="photo">`;
                     return btn;
                 },
                 orderable: false,
@@ -159,7 +163,7 @@ $(document).ready(function () {
             {
                 data: "isShow",
                 render: function (data, type, row) {
-                    const checked = data ? 'checked' : '';
+                    const checked = data ? "checked" : "";
                     const btn = `<input data-id="${row.id}" value="${data}" class="form-check-input" type="checkbox" ${checked}>`;
                     return btn;
                 },
@@ -178,6 +182,66 @@ $(document).ready(function () {
                 data: "id",
                 render: function (data, type, row) {
                     const btn = `<button data-id="${data}" class="btn btn-danger btn-delete-bank-info"><i class="bi bi-trash-fill"></i></button>`;
+                    return btn;
+                },
+                orderable: false,
+            },
+        ],
+    });
+    //table yeu cau chua thanh toan
+    const table_order_unpaid = $("#table_order_unpaid");
+    table_order_unpaid.DataTable({
+        ajax: table_order_unpaid[0].dataset.url,
+        columns: [
+            {
+                data: "id",
+            },
+            {
+                data: "football_pitch.name",
+            },
+            {
+                data: "start_at",
+            },
+            {
+                data: "end_at",
+            },
+            {
+                data: "deposit",
+            },
+            {
+                data: "total",
+            },
+            {
+                data: "code",
+                orderable: false,
+            },
+            {
+                data: "status",
+                render: function (data, type, row) {
+                    switch (data) {
+                        case 0:
+                            return `<div class="text-danger">Hủy</div>`;
+                        case 1:
+                            return `<div class="text-warning">Chờ</div>`;
+                        case 2:
+                            return `<div class="text-running">Đang đá</div>`;
+                        case 3:
+                            return `<div class="text-success">Đã thanh toán</div>`;
+                    }
+                },
+            },
+            {
+                data: "id",
+                render: function (data, type, row) {
+                    const btn_xem = `<a href="#" class="btn btn-info"><i class="bi bi-eye-fill"></i></a>`;
+                    return btn_xem;
+                },
+                orderable: false,
+            },
+            {
+                data: "id",
+                render: function (data, type, row) {
+                    const btn = `<a href="#" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>`;
                     return btn;
                 },
                 orderable: false,

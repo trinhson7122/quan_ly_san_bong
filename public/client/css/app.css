@@ -1,0 +1,13 @@
+:root {
+    --background: #198754;
+}
+.navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover>a {
+    color: #3eb9fc;
+}
+#hero,#footer {
+    background: var(--background);
+}
+#header.header-scrolled {
+    opacity: 0.9;
+    background: #125f3b;
+}

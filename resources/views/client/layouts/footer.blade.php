@@ -1,48 +1,64 @@
-<footer id="footer" class="footer">
-    <hr>
-    <div class="container-fuild ml-3 mr-3">
-        <div class="row row-cols-1 row-cols-2 row-cols-lg-4">
-            <div class="col">
-                <div class="img-fuild">
-                    <a href="/"><img src="{{ config('app.image') . asset('images/football_pitches/default_football_pitch.png') }}" alt="" width="150"></a>
-                </div>
+ <!-- ======= Footer ======= -->
+ <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>{{ config('app.name') }}</h3>
+            <p>
+              A108 Adam Street <br>
+              New York, NY 535022<br>
+              United States <br><br>
+              <strong>Phone:</strong> +1 5589 55488 55<br>
+              <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ddb4b3bbb29db8a5bcb0adb1b8f3beb2b0">[email&#160;protected]</a><br>
+            </p>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Social Networks</h4>
+            <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
+            <div class="social-links mt-3">
+              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
             </div>
-            <div class="col">
-                <h3 class="text-dark">Author Trịnh Xuân Sơn</h3>
-                <div><i class="uil-location-point"></i> Nguyên Xá, Minh Khai, Bắc Từ Liêm, Hà Nội</div>
-                <div><i class="uil-phone-alt"></i> 0372238783</div>
-                <div><i class="uil-envelope"></i> sonit7122@gmail.com</div>
-                <div><i class="uil-github-alt"></i> github.com/trinhson7122</div>
-                <div><a class="text-secondary" target="_blank" href="https://www.facebook.com/Sondznhe.22/"><i
-                            class=" uil-facebook-messenger"></i> Contact me</a></div>
-            </div>
-            <div class="col">
-                <h3 class="text-dark">Về chúng tôi</h3>
-                <div>Giới thiệu</div>
-                <div>Tin tức</div>
-                <div>Khuyến mãi</div>
-                <div>Thành viên</div>
-            </div>
-            <div class="col">
-                <h3 class="text-dark">Chính sách</h3>
-                <div>Cách thức thanh toán</div>
-                <div>Vận chuyển</div>
-                <div>Khuyến mãi</div>
-                <div>Thành viên</div>
-            </div>
+          </div>
+
         </div>
+      </div>
     </div>
-    <hr>
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-md-12 text-center">
-                Coppy right
-                <script>
-                    document.write((new Date).getFullYear());
-                </script>
-                ©TrinhXuanSon
-            </div>
-        </div>
+
+    <div class="container footer-bottom clearfix">
+      <div class="copyright">
+        &copy; Copyright <strong><span>{{ config('app.name') }}</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">Trinh Xuan Son</a>
+      </div>
     </div>
-</footer>
-<!-- end Footer -->
+  </footer><!-- End Footer -->

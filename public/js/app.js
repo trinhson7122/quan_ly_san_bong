@@ -1,5 +1,7 @@
 $(document).ready(function () {
     const DATATABLE_BANK_INFO = $("#table_bank_info");
+    const DATATABLE_ORDER_UNPAID = $("#table_order_unpaid");
+    const DATATABLE_ORDER = $("#table_order");
     $(document).on("click", ".confirm-btn", function (e) {
         const result = confirm("Bạn có chắc chắn không ?");
         if (!result) {
@@ -239,6 +241,34 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 DATATABLE_BANK_INFO.DataTable().ajax.reload();
+                $.toast({
+                    heading: "Thành công",
+                    text: response.message,
+                    showHideTransition: "plain",
+                    icon: response.status,
+                    position: "bottom-right",
+                });
+            },
+        });
+    });
+    //xoa yeu cau
+    $(document).on("click", ".btn-delete-order", function (e) {
+        const result = confirm("Bạn có chắc chắn muốn xóa ?");
+        if (!result) {
+            e.preventDefault();
+            return;
+        }
+        $.ajax({
+            type: "post",
+            url: BASE_URL_API.deleteOrder + $(this)[0].dataset.id,
+            data: {
+                _token: CSRF_TOKEN,
+                _method: "DELETE",
+            },
+            dataType: "json",
+            success: function (response) {
+                DATATABLE_ORDER_UNPAID.DataTable().ajax.reload();
+                DATATABLE_ORDER.DataTable().ajax.reload();
                 $.toast({
                     heading: "Thành công",
                     text: response.message,

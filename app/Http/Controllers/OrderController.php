@@ -42,7 +42,7 @@ class OrderController extends Controller
         ];
         foreach ($orders as $order) {
             $color = '';
-            $color = match($order->status) {
+            $color = match ($order->status) {
                 OrderStatusEnum::Wait => $bg_color['wait'],
                 OrderStatusEnum::Finish => $bg_color['running'],
                 OrderStatusEnum::Cancel => $bg_color['cancel'],
@@ -325,7 +325,18 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $order = Order::find($id);
+        if ($order) {
+            $order->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Yêu cầu đã được xóa'
+            ]);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Không thể tìm thấy yêu cầu',
+        ], Response::HTTP_NOT_FOUND);
     }
 
     public function paid(string $id)
@@ -334,5 +345,18 @@ class OrderController extends Controller
         $obj->status = OrderStatusEnum::Paid;
         $obj->save();
         return redirect()->back()->with('message', 'Thanh toán thành công');
+    }
+
+    public function getOrderUnpaid()
+    {
+        $now = Carbon::now();
+        $order = Order::query()
+            ->where('start_at', '<=', getTimeLaravel($now))
+            ->where('status', OrderStatusEnum::Finish)
+            ->with('footballPitch')
+            ->get();
+        return response()->json([
+            'data' => $order,
+        ]);
     }
 }

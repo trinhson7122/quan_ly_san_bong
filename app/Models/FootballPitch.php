@@ -65,4 +65,9 @@ class FootballPitch extends Model
     {
         return $this->from_football_pitch_id ? ($this->fromFootballPitch->name . ' - ' . $this->toFootballPitch->name) : '';
     }
+
+    public function images()
+    {
+        return $this->hasMany(FootballPitchDetail::class, 'football_pitch_id', 'id');
+    }
 }

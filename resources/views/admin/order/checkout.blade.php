@@ -26,6 +26,10 @@
                                                 {{ $order->footballPitch->pitchType->quantity }} người</span></td>
                                     </tr>
                                     <tr>
+                                        <td>Mã yêu cầu :</td>
+                                        <td>{{ $order->code }}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Người đặt :</td>
                                         <td>{{ $order->name }}</td>
                                     </tr>

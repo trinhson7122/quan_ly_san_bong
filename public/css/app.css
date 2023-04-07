@@ -32,6 +32,9 @@ html {
 .slider-item {
   margin: 0 5px;
 }
+.text-running {
+  color: var(--fc-bg-event-color);
+}
 /*  */
 @media (max-width: 767px) {
   .carousel-inner .carousel-item > div {

@@ -90,7 +90,7 @@ Route::prefix('api')->group(function () {
         Route::get('order', 'showAll')->name('order.showAll');
         Route::get('order_all', 'index')->name('order.index');
         Route::get('order/{id}', 'show')->name('order.show');
-        Route::put('order-paid/{id}', 'paid')->name('order.paid');
+        Route::get('getOrderUnpaid', 'getOrderUnpaid')->name('order.getOrderUnpaid');
     });
     Route::controller(BankInformationController::class)->group(function () {
         Route::get('bank_information', 'index')->name('order.index');
@@ -99,6 +99,8 @@ Route::prefix('api')->group(function () {
         Route::controller(OrderController::class)->group(function () {
             Route::put('order/{id}', 'update')->name('order.update');
             Route::post('order', 'store')->name('order.store');
+            Route::put('order-paid/{id}', 'paid')->name('order.paid');
+            Route::delete('order/{id}', 'destroy')->name('order.destroy');
         });
         Route::controller(BankInformationController::class)->group(function () {
             Route::post('bank_information', 'store')->name('bank_information.store');

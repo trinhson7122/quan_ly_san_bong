@@ -6,6 +6,7 @@ const BASE_URL_API = {
     getOrder: BASE_URL +  '/api/order',
     postOrder: BASE_URL +  '/api/order',
     showOrder: BASE_URL + "/api/order/",//id
+    deleteOrder: BASE_URL + "/api/order/",//id
     updateOrder: BASE_URL + "/api/order/",//id
     maintainFootballPitch: BASE_URL + '/api/footballPitchMaintenance/',//id
     deleteFootballPitch: BASE_URL + '/api/footballPitch/',//id

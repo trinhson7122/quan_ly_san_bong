@@ -54,7 +54,7 @@
                         </div>
                         {{-- chua thanh toan --}}
                         <div class="tab-pane fade" id="order-unpay" role="tabpanel">
-                            <table id="1table_order" class="display" style="width:100%">
+                            <table data-url="{{ route('order.getOrderUnpaid') }}" id="table_order_unpaid" class="display" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>#</th>
