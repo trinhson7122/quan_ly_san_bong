@@ -1,5 +1,6 @@
 /**
 * Template Name: Arsha
+* Updated: Mar 10 2023 with Bootstrap v5.2.3
 * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
@@ -43,7 +44,7 @@ h6 {
   bottom: 0;
   z-index: 9999;
   overflow: hidden;
-  background: #198754;
+  background: #125f3b;
 }
 
 #preloader:before {
@@ -51,7 +52,7 @@ h6 {
   position: fixed;
   top: calc(50% - 30px);
   left: calc(50% - 30px);
-  border: 6px solid #198754;
+  border: 6px solid #125f3b;
   border-top-color: #fff;
   border-bottom-color: #fff;
   border-radius: 50%;
@@ -114,7 +115,7 @@ h6 {
 
 #header.header-scrolled,
 #header.header-inner-pages {
-  background: rgba(40, 58, 90, 0.9);
+  background: #125f3be9;
 }
 
 #header .logo {

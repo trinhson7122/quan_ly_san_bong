@@ -27,6 +27,8 @@ Route::view('test', 'client.master')->name('test');
 Route::controller(ClientController::class)->group(function () {
     Route::name('client.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('san-bong/{id}', 'footballPitchDetail')->name('footballPitchDetail');
+        Route::get('checkout/{id}', 'checkout')->name('checkout');
     });
 });
 //admin
@@ -91,6 +93,9 @@ Route::prefix('api')->group(function () {
         Route::get('order_all', 'index')->name('order.index');
         Route::get('order/{id}', 'show')->name('order.show');
         Route::get('getOrderUnpaid', 'getOrderUnpaid')->name('order.getOrderUnpaid');
+        Route::get('check_order', 'check')->name('order.check');
+        Route::get('find_time', 'findTimeAvailable')->name('order.findTimeAvailable');
+        Route::post('client_store', 'clientStore')->name('order.clientStore');
     });
     Route::controller(BankInformationController::class)->group(function () {
         Route::get('bank_information', 'index')->name('order.index');

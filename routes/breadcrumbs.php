@@ -46,3 +46,13 @@ Breadcrumbs::for('orderCheckout', function ($trail) {
     $trail->parent('orderCalendar');
     $trail->push('Thanh toán');
 });
+//client breadcrumbs
+//Home
+Breadcrumbs::for('client-home', function ($trail) {
+    $trail->push('Trang chủ', route('client.index'));
+});
+//Home > thông tin sân bóng
+Breadcrumbs::for('client-footballPitch', function ($trail) {
+    $trail->parent('client-home');
+    $trail->push('Thông tin sân bóng');
+});

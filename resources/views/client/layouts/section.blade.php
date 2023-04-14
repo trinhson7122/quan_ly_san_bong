@@ -7,7 +7,7 @@
           <h1>Cho thuê sân bóng một cách tốt nhất</h1>
           <h2>Chúng tôi cung cấp các sân bóng tốt với giá cạnh tranh</h2>
           <div class="d-flex justify-content-center justify-content-lg-start">
-            <a href="#about" class="btn-get-started scrollto">Thuê ngay</a>
+            <a href="#portfolio" class="btn-get-started scrollto">Thuê ngay</a>
             <a href="https://www.youtube.com/watch?v=5z0u0BfPJ8o" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Xem video</span></a>
           </div>
         </div>

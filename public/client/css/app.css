@@ -8,6 +8,15 @@
     background: var(--background);
 }
 #header.header-scrolled {
-    opacity: 0.9;
-    background: #125f3b;
+    background: #125f3be9;
+}
+.dropdown-item i {
+    font-size: 20px !important;
+    margin-right: 10px !important;
+}
+.error {
+    display: none;
+}
+.error.error-show {
+    display: block;
 }

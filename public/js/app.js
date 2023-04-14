@@ -1,7 +1,7 @@
+const DATATABLE_BANK_INFO = $("#table_bank_info");
+const DATATABLE_ORDER_UNPAID = $("#table_order_unpaid");
+const DATATABLE_ORDER = $("#table_order");
 $(document).ready(function () {
-    const DATATABLE_BANK_INFO = $("#table_bank_info");
-    const DATATABLE_ORDER_UNPAID = $("#table_order_unpaid");
-    const DATATABLE_ORDER = $("#table_order");
     $(document).on("click", ".confirm-btn", function (e) {
         const result = confirm("Bạn có chắc chắn không ?");
         if (!result) {

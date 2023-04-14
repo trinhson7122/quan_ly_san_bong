@@ -39,7 +39,7 @@
     @yield('content')
     <!-- Vendor JS Files -->
     <script src="{{ asset('/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    {{-- <script src="https://js.pusher.com/7.2/pusher.min.js"></script> --}}
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <!-- Template Main JS File -->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
@@ -50,7 +50,7 @@
     <script src="{{ asset('js/ajax.js') }}"></script>
     <script src="{{ asset('js/func.js') }}"></script>
     <script src="{{ asset('js/datatableSetUp.js') }}"></script>
-    <script src="{{ asset('js/pusher.js') }}"></script>
+    {{-- <script src="{{ asset('js/pusher.js') }}"></script> --}}
 
 
 </body>

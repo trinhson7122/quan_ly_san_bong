@@ -16,11 +16,23 @@ function timeForHumans($time)
     return $time . ($temp == 'am' ? 'Giờ sáng' : 'Giờ chiều');
 }
 //hien thi thoi gian 
-function getTimeLaravel($timeJson)
+function getDateTimeLaravel($timeJson)
 {
     $time = new Carbon($timeJson);
     $time->setTimezone(config('app.timezone'));
     return $time->toDateTimeString();
+}
+function getDateLaravel($timeJson)
+{
+    $time = new Carbon($timeJson);
+    $time->setTimezone(config('app.timezone'));
+    return $time->toDateString();
+}
+function getTimeLaravel($timeJson)
+{
+    $time = new Carbon($timeJson);
+    $time->setTimezone(config('app.timezone'));
+    return $time->toTimeString();
 }
 //tinh tien cho order theo gio cao diem
 function getPriceOrder($arrTimeMain, $arrDateTimeCheck, $price_per_hour, $price_per_peak_hour)

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -69,5 +70,15 @@ class FootballPitch extends Model
     public function images()
     {
         return $this->hasMany(FootballPitchDetail::class, 'football_pitch_id', 'id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'football_pitch_id', 'id');
+    }
+
+    public function countOrderSuccess()
+    {
+        return $this->orders->where('status','>=' , OrderStatusEnum::Finish)->count();
     }
 }

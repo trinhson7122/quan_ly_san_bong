@@ -13,7 +13,7 @@
         <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
           <div class="icon-box">
             <div class="icon"><i class="bi bi-water"></i></div>
-            <h4><a href="#">Nước giải khát</a></h4>
+            <h4>Nước giải khát</h4>
             <p>Đầy đủ các loại nước giúp bổ xung thể lực trong và sau trận đấu</p>
           </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
           <div class="icon-box">
             <div class="icon"><i class="bi bi-circle"></i></div>
-            <h4><a href="#">Bóng</a></h4>
+            <h4>Bóng</h4>
             <p>Bóng xịn, đá sướng chân, bơm hơi nếu cần</p>
           </div>
         </div>
@@ -29,7 +29,7 @@
         <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="300">
           <div class="icon-box">
             <div class="icon"><i class="bi bi-files"></i></div>
-            <h4><a href="#">Sân bóng</a></h4>
+            <h4>Sân bóng</h4>
             <p>Bao gồm các loại sân với mức giá khác nhau, phù hợp với yêu cầu người dùng</p>
           </div>
         </div>
@@ -37,7 +37,7 @@
         <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="400">
           <div class="icon-box">
             <div class="icon"><i class="bi bi-bicycle"></i></div>
-            <h4><a href="#">Gửi xe</a></h4>
+            <h4>Gửi xe</h4>
             <p>Gửi xe an toàn, bảo mật với thẻ từ giúp bảo vệ tài sản của khách hàng một cách tốt nhất</p>
           </div>
         </div>

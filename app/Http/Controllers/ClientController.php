@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
+use App\Models\BankInformation;
 use App\Models\FootballPitch;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -13,24 +14,35 @@ class ClientController extends Controller
     public function index()
     {
         $title = "Trang chủ";
-        // $topFootballPitches = DB::table('orders')
-        //     ->where('status', OrderStatusEnum::Finish)
-        //     ->groupBy('football_pitch_id')
-        //     ->selectRaw("football_pitch_id, count(football_pitch_id) as test")->get();
-            //->get(['football_pitch_id']);
-        // $topFootballPitches = Order::query()->where('status', OrderStatusEnum::Finish)
-        //     ->where('status', OrderStatusEnum::Finish)
-        //     ->orderBy('aggregate', 'desc')
-        //     ->groupBy('football_pitch_id')
-        //     ->count('id');
-            //->get(['aggregate', 'football_pitch_id']);
-        //dd($topFootballPitches);
         $footballPitches = FootballPitch::query()->with('pitchType')->with('images')->get();
-        //dd($footballPitches->find(3)->images->count());
         return view('client.home.index', [
             'title' => $title,
             'footballPitches' => $footballPitches,
-            //'topFootballPitches' => $topFootballPitches,
+        ]);
+    }
+    //chi tiet san bong
+    public function footballPitchDetail(string $id)
+    {
+        $title = "Chi tiết sân bóng";
+        $footballPitch = FootballPitch::query()->with('pitchType')->with('images')->with('orders')->find($id);
+        return view('client.home.footballPitchDetail', [
+            'title' => $title,
+            'footballPitch' => $footballPitch,
+        ]);
+    }
+    //checkout
+    public function checkout(string $id)
+    {
+        $title = "Thông tin đặt sân";
+        $order = Order::query()->with('footballPitch')->where('status', OrderStatusEnum::Wait)->find($id);
+        if (!$order) {
+            return abort(404);
+        }
+        $bankInfo = BankInformation::query()->where('isShow', 1)->get();
+        return view('client.home.checkout', [
+            'title' => $title,
+            'order' => $order,
+            'bankInfo' => $bankInfo,
         ]);
     }
 }
