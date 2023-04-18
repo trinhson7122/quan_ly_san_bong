@@ -29,6 +29,18 @@ Route::controller(ClientController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('san-bong/{id}', 'footballPitchDetail')->name('footballPitchDetail');
         Route::get('checkout/{id}', 'checkout')->name('checkout');
+        Route::get('findOderByCode', 'findOrderByCode')->name('findOrderByCode');
+    });
+});
+Route::middleware('client')->group(function () {
+    Route::controller(AuthController::class)->group(function (){
+        Route::get('logout', 'processClientLogout')->name('client.logout');
+    });
+});
+Route::middleware('not_client')->group(function () {
+    Route::controller(AuthController::class)->group(function (){
+        Route::get('login', 'clientLogin')->name('client.login');
+        Route::get('register', 'clientRegister')->name('client.register');
     });
 });
 //admin
@@ -95,6 +107,7 @@ Route::prefix('api')->group(function () {
         Route::get('getOrderUnpaid', 'getOrderUnpaid')->name('order.getOrderUnpaid');
         Route::get('check_order', 'check')->name('order.check');
         Route::get('find_time', 'findTimeAvailable')->name('order.findTimeAvailable');
+        Route::post('findFootballPitchNotInOrderByDateTime', 'findFootballPitchNotInOrderByDateTime')->name('order.findFootballPitchNotInOrderByDateTime');
         Route::post('client_store', 'clientStore')->name('order.clientStore');
     });
     Route::controller(BankInformationController::class)->group(function () {

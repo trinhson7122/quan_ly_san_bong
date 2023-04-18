@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,5 +43,15 @@ class Order extends Model
     public function finalTotal()
     {
         return printMoney($this->total - $this->deposit);
+    }
+
+    public function totalTime()
+    {
+        $start_at = new Carbon($this->start_at);
+        $end_at = new Carbon($this->end_at);
+        $h = (int)($start_at->diffInMinutes($end_at) / 60);
+        $m = $start_at->diffInMinutes($end_at) % 60;
+        $totalTime = "$h giờ $m phút";
+        return $totalTime;
     }
 }

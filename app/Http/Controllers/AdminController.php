@@ -93,11 +93,6 @@ class AdminController extends Controller
         if (!$order) {
             abort(404); 
         }
-        $start_at = new Carbon($order->start_at);
-        $end_at = new Carbon($order->end_at);
-        $h = (int)($start_at->diffInMinutes($end_at) / 60);
-        $m = $start_at->diffInMinutes($end_at) % 60;
-        $totalTime = "$h giờ $m phút";
         $arr = [];
         $isCheckout = ($order->status == OrderStatusEnum::Paid) ? true : false;
         if ($isCheckout) {
@@ -113,7 +108,6 @@ class AdminController extends Controller
         return view('admin.order.checkout', [
             'title' => $title,
             'order' => $order,
-            'totalTime' => $totalTime,
             'arr' => $arr,
             'isCheckout' => $isCheckout,
         ]);

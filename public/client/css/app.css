@@ -20,3 +20,14 @@
 .error.error-show {
     display: block;
 }
+.btn-block {
+    width: 100%;
+}
+.social-links a {
+    padding: 10px;
+    border-radius: 50%;
+}
+.social-links a {
+    padding: 10px;
+    border-radius: 50%;
+}

@@ -190,14 +190,12 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             error: function (response) {
                 $('#update-order-modal').modal('hide');
-                console.log(response.responseJSON);
-                info.revert();
                 response = response.responseJSON;
                 $.toast({
                     heading: "Thất bại",
                     text: response.message,
                     showHideTransition: "plain",
-                    icon: response.status,
+                    icon: 'error',
                     position: "bottom-right",
                 });
             },

@@ -24,13 +24,9 @@
 
           <div class="col-lg-4 col-md-6 footer-links">
             <h4>Các mạng xã hội</h4>
-            <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
             <div class="social-links mt-3">
-              <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
               <a target="_blank" href="https://www.facebook.com/Sondznhe.22/" class="facebook"><i class="bx bxl-facebook"></i></a>
-              <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-              <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-              <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+              <a href="https://github.com/trinhson7122" class="github"><i class="bx bxl-github"></i></a>
             </div>
           </div>
 

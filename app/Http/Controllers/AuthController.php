@@ -46,4 +46,30 @@ class AuthController extends Controller
             return to_route('admin.login');
         }
     }
+
+    public function processClientLogout(Request $request)
+    {
+        if(Auth::check()){
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return to_route('client.index');
+        }
+    }
+
+    public function clientLogin()
+    {
+        $title = 'Login';
+        return view('client.auth.login', [
+            'title' => $title,
+        ]);
+    }
+
+    public function clientRegister() 
+    {
+        $title = 'Register';
+        return view('client.auth.register', [
+            'title' => $title,
+        ]);
+    }
 }

@@ -10,9 +10,15 @@
                 <li><a class="nav-link scrollto" href="#services">Dịch vụ</a></li>
                 <li><a class="nav-link scrollto" href="#portfolio">Sân bóng</a></li>
                 <li><a class="nav-link scrollto" href="#about">Về chúng tôi</a></li>
+                <li class="dropdown"><a href="#"><span>Chức năng</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#findFootballPitchAvailableModal">Tìm kiếm sân trống</a></li>
+                        <li><a href="{{ route('client.findOrderByCode') }}">Tra cứu yêu cầu đặt sân</a></li>
+                    </ul>
+                </li>
                 @guest
-                    <li><a class="getstarted" href="#about1">Đăng nhập</a></li>
-                    <li><a class="getstarted" href="#about1">Đăng ký</a></li>
+                    <li><a class="getstarted" href="{{ route('client.login') }}">Đăng nhập</a></li>
+                    <li><a class="getstarted" href="{{ route('client.register') }}">Đăng ký</a></li>
                 @endguest
                 @auth
                     <li class="dropdown">
@@ -26,7 +32,8 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex justify-content-start align-items-center text-left" href="users-profile.html">
+                                <a class="dropdown-item d-flex justify-content-start align-items-center text-left"
+                                    href="users-profile.html">
                                     <i class="bi bi-person"></i>
                                     <span>Thông tin</span>
                                 </a>
@@ -36,7 +43,8 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item justify-content-start d-flex align-items-center" href="pages-faq.html">
+                                <a class="dropdown-item justify-content-start d-flex align-items-center"
+                                    href="pages-faq.html">
                                     <i class="bi bi-card-list"></i>
                                     <span>Yêu cầu đã đặt</span>
                                 </a>
@@ -46,7 +54,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item justify-content-start d-flex align-items-center" href="#">
+                                <a class="dropdown-item justify-content-start d-flex align-items-center" href="{{ route('client.logout') }}">
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>Đăng xuất</span>
                                 </a>
@@ -61,3 +69,4 @@
 
     </div>
 </header><!-- End Header -->
+@include('client.modal.findFootballPitchAvailable')

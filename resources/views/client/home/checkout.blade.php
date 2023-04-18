@@ -57,7 +57,8 @@
                     </div>
                     <div class="alert alert-info mt-2">
                         <i class="bi bi-info-circle"></i>
-                        Nếu sau khi chuyển khoản thành công quá 5 phút mà vẫn chưa được thông báo đặt sân thành công. Vui lòng liên hệ
+                        Nếu sau khi chuyển khoản thành công quá 5 phút mà vẫn chưa được thông báo đặt sân thành công.
+                         Vui lòng liên hệ số điện thoại bên dưới
                     </div>
                 </div>
                 <div class="col-lg-5">

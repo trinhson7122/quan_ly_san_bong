@@ -190,6 +190,14 @@ class OrderController extends Controller
                 'status' => 'error'
             ], Response::HTTP_BAD_REQUEST);
         }
+        $nearStartAt = new Carbon($validated['start_at']);
+        $nearEndAt = new Carbon($validated['end_at']);
+        if ($nearEndAt <= $nearStartAt) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Vui lòng chọn thời gian kết thúc lớn hơn thời gian bắt đầu',
+            ], Response::HTTP_BAD_REQUEST);
+        }
         //lấy thời gian bắt đầu và kết thúc của ngày hôm nay
         $end_of_day = (new Carbon(getDateLaravel($validated['start_at'])))->endOfDay();
         $start_of_day = (new Carbon(getDateLaravel($validated['end_at'])))->startOfDay();
@@ -488,6 +496,14 @@ class OrderController extends Controller
                 'status' => 'error'
             ], Response::HTTP_BAD_REQUEST);
         }
+        $nearStartAt = new Carbon($validated['start_at']);
+        $nearEndAt = new Carbon($validated['end_at']);
+        if ($nearEndAt <= $nearStartAt) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Vui lòng chọn thời gian kết thúc lớn hơn thời gian bắt đầu',
+            ], Response::HTTP_BAD_REQUEST);
+        }
         //lấy thời gian bắt đầu và kết thúc của ngày đặt sân
         $end_of_day = (new Carbon(getDateLaravel($validated['start_at'])))->endOfDay();
         $start_of_day = (new Carbon(getDateLaravel($validated['end_at'])))->startOfDay();
@@ -612,6 +628,59 @@ class OrderController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Tất cả thời gian đều trống',
+        ]);
+    }
+
+    public function findFootballPitchNotInOrderByDateTime(Request $request)
+    {
+        $validated = $request->validate([
+            'start_at' => 'required|date',
+            'end_at' => 'required|date',
+        ]);
+        $peak_hour = PeakHour::all()->first();
+        $nearStartAt = new Carbon($validated['start_at']);
+        $nearEndAt = new Carbon($validated['end_at']);
+        if ($nearEndAt <= $nearStartAt) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Vui lòng chọn thời gian kết thúc lớn hơn thời gian bắt đầu',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+        $nearStartAt->addMinutes(1);
+        $nearEndAt->subMinutes(1);
+        $orders = Order::query()->whereBetween('start_at', [
+            $validated['start_at'],
+            $nearEndAt->toDateTimeString(),
+        ])
+        ->orWhereBetween('end_at', [
+            $nearStartAt->toDateTimeString(),
+            $validated['end_at'],
+        ])
+        ->groupBy('football_pitch_id')->get(['football_pitch_id']);
+        $footballPitchs = FootballPitch::query()
+            ->where('is_maintenance', 0)
+            ->whereNotIn('id', $orders->pluck('football_pitch_id'))
+            ->with('pitchType')
+            ->get();
+        $data = [];
+        foreach ($footballPitchs as $item) {
+            $total_price = getPriceOrder([
+                'time_start' => $peak_hour->start_at,
+                'time_end' => $peak_hour->end_at,
+            ], [
+                'start_at' => $validated['start_at'],
+                'end_at' => $validated['end_at'],
+            ], $item->price_per_hour, $item->price_per_peak_hour);
+            $data[] = [
+                'total_price' => printMoney($total_price),
+                'name' => $item->name,
+                'quantity' => $item->pitchType->quantity,
+
+            ];
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
         ]);
     }
 }

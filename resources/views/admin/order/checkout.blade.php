@@ -47,7 +47,7 @@
                                     </tr>
                                     <tr>
                                         <td>Tổng thời gian : </td>
-                                        <td>{{ $totalTime }}</td>
+                                        <td>{{ $order->totalTime() }}</td>
                                     </tr>
                                     <tr>
                                         <td>Ghi chú : </td>
