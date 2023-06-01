@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Notifications\SendMailWhenClientStoreFootballPitchNotification;
 use App\Notifications\SendMailWhenUpdateStatusOrderNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -31,5 +32,6 @@ class SendMailWhenUpdateStatusOrderJob implements ShouldQueue
     {
         //$this->obj->notify((new SendMailWhenUpdateStatusOrderNotification($this->obj)));
         Notification::send($this->obj, (new SendMailWhenUpdateStatusOrderNotification($this->obj)));
+        //Notification::send($this->obj, (new SendMailWhenClientStoreFootballPitchNotification($this->obj)));
     }
 }

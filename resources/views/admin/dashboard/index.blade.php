@@ -186,52 +186,17 @@
                         <div class="col-xxl-6 col-md-6">
                             <div class="card info-card customers-card">
 
-                                <div class="filter">
-                                    <a class="icon" href="#" data-bs-toggle="dropdown"><i
-                                            class="bi bi-three-dots"></i></a>
-                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                        <li class="dropdown-header text-start">
-                                            <h6>Lọc</h6>
-                                        </li>
-
-                                        <li><a class="dropdown-item" onclick="searchUrl('new_customer_filter', 'today')"
-                                                href="javascript:void(0)">Hôm nay</a></li>
-                                        <li><a class="dropdown-item"
-                                                onclick="searchUrl('new_customer_filter', 'this_month')"
-                                                href="javascript:void(0)">Tháng này</a></li>
-                                        <li><a class="dropdown-item"
-                                                onclick="searchUrl('new_customer_filter', 'this_year')"
-                                                href="javascript:void(0)">Năm này</a></li>
-                                    </ul>
-                                </div>
-
                                 <div class="card-body">
-                                    <h5 class="card-title">Khách hàng mới
-                                        @if ($order['new_customer']['filter'] == 'today')
-                                            <span>| Hôm nay</span>
-                                        @elseif ($order['new_customer']['filter'] == 'this_month')
-                                            <span>| Tháng này</span>
-                                        @else
-                                            <span>| Năm này</span>
-                                        @endif
+                                    <h5 class="card-title">Yêu cầu đặt sân đang chờ duyệt hôm nay
                                     </h5>
 
                                     <div class="d-flex align-items-center">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-person-plus-fill"></i>
+                                            <i class="bi bi-diagram-3-fill"></i>
                                         </div>
                                         <div class="ps-3">
-                                            <h6>{{ $order['new_customer']['value'] }}</h6>
-                                            @if ($order['new_customer']['grow'] == 'increase')
-                                                <span
-                                                    class="text-success small pt-1 fw-bold">{{ $order['new_customer']['percent'] }}%</span>
-                                                <span class="text-muted small pt-2 ps-1">Tăng</span>
-                                            @else
-                                                <span
-                                                    class="text-danger small pt-1 fw-bold">{{ $order['new_customer']['percent'] }}%</span>
-                                                <span class="text-muted small pt-2 ps-1">Giảm</span>
-                                            @endif
+                                            <h6>{{ $order['order_wait_today']['value'] }} đơn</h6>
                                         </div>
                                     </div>
                                 </div>

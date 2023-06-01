@@ -438,6 +438,9 @@ class OrderController extends Controller
                     if (!$order->user_id) {
                         $validated['user_id'] = auth()->user()->id;
                     }
+                    if ($order->status != OrderStatusEnum::Finish) {
+                        dispatch(new SendMailWhenUpdateStatusOrderJob($order));
+                    }
                     $order->update($validated);
                     $arr = [
                         'id' => $order->id,
@@ -448,10 +451,6 @@ class OrderController extends Controller
                             'football_pitch_id' => $order->footballPitch->id,
                         ]
                     ];
-                    // if ($order->status != OrderStatusEnum::Finish) {
-                    //     dispatch(new SendMailWhenUpdateStatusOrderJob($order));
-                    // }
-                    dispatch(new SendMailWhenUpdateStatusOrderJob($order));
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Yêu cầu đã được cập nhật hoàn tất',
@@ -490,6 +489,7 @@ class OrderController extends Controller
         $obj = Order::find($id);
         $obj->status = OrderStatusEnum::Paid;
         $obj->save();
+        dispatch(new SendMailWhenUpdateStatusOrderJob($obj));
         return redirect()->back()->with('message', 'Thanh toán thành công');
     }
 

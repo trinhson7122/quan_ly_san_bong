@@ -29,6 +29,6 @@ class SendMailWhenClientStoreFootballPitchJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Notification::send($this->obj, (new SendMailWhenClientStoreFootballPitchNotification())->toMail($this->obj));
+        Notification::send($this->obj, (new SendMailWhenClientStoreFootballPitchNotification($this->obj)));
     }
 }

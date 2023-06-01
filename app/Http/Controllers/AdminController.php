@@ -87,12 +87,25 @@ class AdminController extends Controller
                 'end' => new Carbon(),
             ]
         ];
+        $order['order_wait_today'] = [
+            'filter' => 'today',
+            'value' => 0,
+            'date' => [
+                'start' => new Carbon(),
+                'end' => new Carbon(),
+            ],
+            'dateCompare' => [
+                'start' => new Carbon(),
+                'end' => new Carbon(),
+            ]
+        ];
 
         $order['sale'] = setDateFilter($order['sale']);
         $order['revenue'] = setDateFilter($order['revenue']);
         $order['new_customer'] = setDateFilter($order['new_customer']);
         $order['top_order'] = setDateFilter($order['top_order']);
         $order['top_customer'] = setDateFilter($order['top_customer']);
+        $order['order_wait_today'] = setDateFilter($order['order_wait_today']);
 
         //sale
         $orderFilters = Order::query()
@@ -252,6 +265,11 @@ class AdminController extends Controller
             $arr[] = $newArr;
         }
         //
+        $orderWaitToday = Order::query()
+            ->where('status', '=', OrderStatusEnum::Wait)
+            ->whereBetween('updated_at', [$order['order_wait_today']['date']['start'], $order['order_wait_today']['date']['end']])
+            ->get();
+        $order['order_wait_today']['value'] = $orderWaitToday->count();
 
         return view('admin.dashboard.index', [
             'title' => $title,

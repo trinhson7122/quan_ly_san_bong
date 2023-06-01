@@ -15,9 +15,9 @@ class SendMailWhenClientStoreFootballPitchNotification extends Notification
      * Create a new notification instance.
      */
     private $order;
-    public function __construct()
+    public function __construct($order)
     {
-        //$this->order = $order;
+        $this->order = $order;
     }
 
     /**
@@ -35,14 +35,13 @@ class SendMailWhenClientStoreFootballPitchNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        dd(1);
-        $url = route('client.findOrderByCode') . '?code=' . $notifiable->code;
+        //$url = route('client.findOrderByCode') . '?code=' . $this->order->code;
         return (new MailMessage)
-                    ->subject('Đã tiếp nhận yêu cầu '. $notifiable->code)
-                    ->greeting('Xin chào ' . $notifiable->name)
+                    ->subject('Đã tiếp nhận yêu cầu '. $this->order->code)
+                    ->greeting('Xin chào ' . $this->order->name)
                     ->line('Chúng tôi đã nhận được yêu cầu đặt sân của bạn.')
                     ->line('Hiện tại yêu cầu này đang được xử lý.')
-                    ->action('Bạn có thể xem tình trạng sân bóng của bạn tại đây', $url)
+                    //->action('Bạn có thể xem tình trạng sân bóng của bạn tại đây', $url)
                     ->line('Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!');
     }
 
