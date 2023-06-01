@@ -39,7 +39,7 @@
                             Ảnh (QR Code)
                         </label>
                         <div class="col-sm-8">
-                            <input type="file" name="image" class="form-control fill-blank">
+                            <input accept="image/*" type="file" name="image" class="form-control fill-blank">
                         </div>
                     </div>
                     <div class="row mb-3">

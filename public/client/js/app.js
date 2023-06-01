@@ -206,7 +206,11 @@ $(document).ready(function () {
                                 <div class="fw-bold">Giá: ${response.data[i].total_price}</div>
                             </div>
                             <div class="col-4">
-                                <button type="button" class="btn btn-success">Đặt ngay</button>
+                                <button type="button" class="btn btn-success show-modal-when-found" data-bs-toggle="modal"
+                                data-bs-target="#orderModalWhenFoundFootballPitch" 
+                                data-football_pitch_id="${response.data[i].football_pitch_id}" data-start_at="${response.data[i].start_at}" data-end_at="${response.data[i].end_at}" >
+                                    Đặt ngay
+                                </button>
                             </div>
                         </div>
                         `;
@@ -223,4 +227,72 @@ $(document).ready(function () {
             });
         }
     );
+    //cap nhat khi nhan dat ngay
+    $(document).on("click", ".show-modal-when-found", function (e) {
+        const modalForm = $('#orderModalWhenFoundFootballPitch form');
+        modalForm.find('input[name="football_pitch_id"]').val($(this).data("football_pitch_id"));
+        modalForm.find('input[name="start_at"]').val($(this).data("start_at"));
+        modalForm.find('input[name="end_at"]').val($(this).data("end_at"));
+    });
+    //dat san khi nhan dat ngay o mo modal tim san trong theo thoi gian
+    $(document).on("click", "#orderModalWhenFoundFootballPitch .btn-order", function () {
+        const form = $(this).parents("form");
+        const error = form.find(".alert-main");
+        const modal = $("#orderModalWhenFoundFootballPitch");
+        const er_name = form.find(".error-name");
+        const er_phone = form.find(".error-phone");
+        const er_email = form.find(".error-email");
+        $.ajax({
+            type: "post",
+            url: form.attr("action"),
+            data: form.serialize(),
+            dataType: "json",
+            success: function (response) {
+                modal.modal("hide");
+                error[0].classList.remove("error-show");
+                $.toast({
+                    heading: "Thành công",
+                    text: response.message,
+                    showHideTransition: "plain",
+                    icon: response.status,
+                    position: "bottom-right",
+                });
+                setTimeout(function () {
+                    location.href = response.redirect;
+                }, 3000);
+            },
+            error: function (response) {
+                response = response.responseJSON;
+                er_name[0].classList.add("error-hide");
+                er_name[0].classList.remove("error-show");
+                er_phone[0].classList.add("error-hide");
+                er_phone[0].classList.remove("error-show");
+                er_phone[0].classList.add("error-hide");
+                er_email[0].classList.remove("error-show");
+                if (response.errors) {
+                    if (response.errors.name) {
+                        er_name[0].classList.add("error-show");
+                        er_name[0].textContent = response.errors.name;
+                    }
+                    if (response.errors.phone) {
+                        er_phone[0].classList.add("error-show");
+                        er_phone[0].textContent = response.errors.phone;
+                    }
+                    if (response.errors.email) {
+                        er_email[0].classList.add("error-show");
+                        er_email[0].textContent = response.errors.email;
+                    }
+                } else {
+                    error[0].classList.add("error-show");
+                    error[0].textContent = response.message;
+                }
+            },
+        });
+    });
+    $(document).on("click", ".confirm-btn", function (e) {
+        const result = confirm("Bạn có chắc chắn không ?");
+        if (!result) {
+            e.preventDefault();
+        }
+    });
 });

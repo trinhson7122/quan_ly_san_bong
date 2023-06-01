@@ -110,7 +110,7 @@ $(document).ready(function () {
             {
                 data: "id",
                 render: function (data, type, row) {
-                    const btn_xem = `<a href="#" class="btn btn-info"><i class="bi bi-eye-fill"></i></a>`;
+                    const btn_xem = `<button onCLick="showModal(${data})" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>`;
                     return btn_xem;
                 },
                 orderable: false,
@@ -118,6 +118,7 @@ $(document).ready(function () {
             {
                 data: "id",
                 render: function (data, type, row) {
+                    if (ROLE != 2) return "";
                     const btn = `<button data-id="${data}" class="btn btn-danger btn-delete-order"><i class="bi bi-trash-fill"></i></button>`;
                     return btn;
                 },
@@ -233,7 +234,7 @@ $(document).ready(function () {
             {
                 data: "id",
                 render: function (data, type, row) {
-                    const btn_xem = `<a href="#" class="btn btn-info"><i class="bi bi-eye-fill"></i></a>`;
+                    const btn_xem = `<button onCLick="showModal(${data})" class="btn btn-info"><i class="bi bi-eye-fill"></i></button>`;
                     return btn_xem;
                 },
                 orderable: false,
@@ -241,7 +242,8 @@ $(document).ready(function () {
             {
                 data: "id",
                 render: function (data, type, row) {
-                    const btn = `<a href="#" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>`;
+                    if (ROLE != 2) return "";
+                    const btn = `<button data-id="${data}" class="btn btn-danger btn-delete-bank-info"><i class="bi bi-trash-fill"></i></button>`;
                     return btn;
                 },
                 orderable: false,
@@ -249,3 +251,35 @@ $(document).ready(function () {
         ],
     });
 });
+function showModal(id) {
+    $.ajax({
+        type: "get",
+        url: BASE_URL_API.showOrder + id,
+        success: function (response) {
+            $("#update-order-modal input[name='name']").val(
+                response.data.name
+            );
+            $("#update-order-modal input[name='email']").val(
+                response.data.email
+            );
+            $("#update-order-modal input[name='phone']").val(
+                response.data.phone
+            );
+            $("#update-order-modal input[name='deposit']").val(
+                response.data.deposit
+            );
+            $("#update-order-modal textarea[name='note']").html(
+                response.data.note
+            );
+            let btn = $("#update-order-modal #checkout")[0];
+            let href = btn.href;
+            let arr = href.split('/');
+            arr[arr.length - 1] = id;
+            href = arr.toString().replaceAll(',', '/');
+            btn.href = href;
+            //console.log(response);
+        },
+    });
+    $("#update-order-modal form")[0].dataset.id = id;
+    $("#update-order-modal").modal("show");
+}

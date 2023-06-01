@@ -5,7 +5,7 @@
         <div class="pagetitle">
             <h1>Quản lý thông tin chuyển khoản</h1>
         </div>
-        {{ Breadcrumbs::render('orderTable') }}
+        {{ Breadcrumbs::render('bankInformation') }}
         {{-- @include('admin.layouts.alert') --}}
         {{-- Body --}}
         <section class="section">

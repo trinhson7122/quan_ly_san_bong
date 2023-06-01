@@ -279,24 +279,63 @@ $(document).ready(function () {
             },
         });
     });
+    //cap nhat yeu cau
+    $(document).on("click", ".btn-update-order", function () {
+        const form = $(this).parents("form");
+        $.ajax({
+            type: "post",
+            url: BASE_URL_API.updateOrder + form[0].dataset.id,
+            data: form.serialize(),
+            dataType: "json",
+            success: function (response) {
+                $.toast({
+                    heading: "Thành công",
+                    text: response.message,
+                    showHideTransition: "plain",
+                    icon: response.status,
+                    position: "bottom-right",
+                });
+                $("#update-order-modal").modal("hide");
+                calendar
+                    .getEventById(form[0].dataset.id)
+                    .setProp("title", response.data.title);
+                calendar
+                    .getEventById(form[0].dataset.id)
+                    .setProp("backgroundColor", "#8fdf82");
+                //calendar.removeAllEvents();
+                //calendar.refetchEvents();
+            },
+            error: function (response) {
+                $("#update-order-modal").modal("hide");
+                response = response.responseJSON;
+                $.toast({
+                    heading: "Thất bại",
+                    text: response.message,
+                    showHideTransition: "plain",
+                    icon: "error",
+                    position: "bottom-right",
+                });
+            },
+        });
+    });
 });
-let items = document.querySelectorAll(
-    "#recipeCarousel.carousel .carousel-item"
-);
+// let items = document.querySelectorAll(
+//     "#recipeCarousel.carousel .carousel-item"
+// );
 
-items.forEach((el) => {
-    const minPerSlide = 4;
-    let next = el.nextElementSibling;
-    for (var i = 1; i < minPerSlide; i++) {
-        if (!next) {
-            // wrap carousel by using first child
-            next = items[0];
-        }
-        let cloneChild = next.cloneNode(true);
-        el.appendChild(cloneChild.children[0]);
-        next = next.nextElementSibling;
-    }
-});
+// items.forEach((el) => {
+//     const minPerSlide = 4;
+//     let next = el.nextElementSibling;
+//     for (var i = 1; i < minPerSlide; i++) {
+//         if (!next) {
+//             // wrap carousel by using first child
+//             next = items[0];
+//         }
+//         let cloneChild = next.cloneNode(true);
+//         el.appendChild(cloneChild.children[0]);
+//         next = next.nextElementSibling;
+//     }
+// });
 
 function clearInputModal(selectorModal) {
     const inputs = $(selectorModal).find("input.fill-blank");

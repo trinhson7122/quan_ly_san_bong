@@ -3,20 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
-use App\Events\ClientStoreOrderEvent;
 use App\Http\Requests\OrderClientStoreRequest;
+use App\Jobs\ClientStoreFootballPitchJob;
+use App\Jobs\SendMailWhenClientStoreFootballPitchJob;
+use App\Jobs\SendMailWhenUpdateStatusOrderJob;
 use App\Models\FootballPitch;
 use App\Models\Order;
 use App\Models\PeakHour;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Stringable;
-use Termwind\Components\Dd;
-
 class OrderController extends Controller
 {
     public function showAll(Request $request)
@@ -25,16 +23,19 @@ class OrderController extends Controller
             getDateTimeLaravel($request->start),
             getDateTimeLaravel($request->end),
         ];
-        $orders = Order::query()->with('footballPitch')->whereBetween('start_at', $arrInTime)->get(
-            [
-                'id',
-                'football_pitch_id',
-                'name',
-                'end_at',
-                'start_at',
-                'status',
-            ]
-        );
+        $orders = Order::query()
+            ->with('footballPitch')
+            ->where('status', '<>', OrderStatusEnum::Cancel)
+            ->whereBetween('start_at', $arrInTime)->get(
+                [
+                    'id',
+                    'football_pitch_id',
+                    'name',
+                    'end_at',
+                    'start_at',
+                    'status',
+                ]
+            );
         $arr = [];
         $bg_color = [
             'wait' => '',
@@ -97,7 +98,9 @@ class OrderController extends Controller
             getDateTimeLaravel($end_of_day),
         ];
         //tìm những sân đang được đặt trong hôm nay
-        $orders = Order::query()->where('football_pitch_id', $validated['football_pitch_id'])
+        $orders = Order::query()
+            ->where('status', '<>', OrderStatusEnum::Cancel)
+            ->where('football_pitch_id', $validated['football_pitch_id'])
             ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
         //nếu sân yêu cầu đã được đặt trong thời gian đó rồi thì trả về lỗi
         foreach ($orders as $item) {
@@ -110,7 +113,9 @@ class OrderController extends Controller
         }
         //tìm xem sân đang yêu cầu có đang liên kết với sân nào không, có thì trả về lỗi
         if ($football_pitch->from_football_pitch_id && $football_pitch->to_football_pitch_id) {
-            $order_with_football_pitch_links = Order::query()->where('football_pitch_id', $football_pitch->from_football_pitch_id)
+            $order_with_football_pitch_links = Order::query()
+                ->where('status', '<>', OrderStatusEnum::Cancel)
+                ->where('football_pitch_id', $football_pitch->from_football_pitch_id)
                 ->orWhere('football_pitch_id', $football_pitch->to_football_pitch_id)
                 ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
             foreach ($order_with_football_pitch_links as $item) {
@@ -206,7 +211,9 @@ class OrderController extends Controller
             getDateTimeLaravel($end_of_day),
         ];
         //tìm những sân đang được đặt trong hôm nay
-        $orders = Order::query()->where('football_pitch_id', $validated['football_pitch_id'])
+        $orders = Order::query()
+            ->where('status', '<>', OrderStatusEnum::Cancel)
+            ->where('football_pitch_id', $validated['football_pitch_id'])
             ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
         //nếu sân yêu cầu đã được đặt trong thời gian đó rồi thì trả về lỗi
         foreach ($orders as $item) {
@@ -219,7 +226,9 @@ class OrderController extends Controller
         }
         //tìm xem sân đang yêu cầu có đang liên kết với sân nào không, có thì trả về lỗi
         if ($football_pitch->from_football_pitch_id && $football_pitch->to_football_pitch_id) {
-            $order_with_football_pitch_links = Order::query()->where('football_pitch_id', $football_pitch->from_football_pitch_id)
+            $order_with_football_pitch_links = Order::query()
+                ->where('status', '<>', OrderStatusEnum::Cancel)
+                ->where('football_pitch_id', $football_pitch->from_football_pitch_id)
                 ->orWhere('football_pitch_id', $football_pitch->to_football_pitch_id)
                 ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
             foreach ($order_with_football_pitch_links as $item) {
@@ -232,6 +241,7 @@ class OrderController extends Controller
             }
         } else {
             $orders = Order::query()
+                ->where('status', '<>', OrderStatusEnum::Cancel)
                 ->join('football_pitches', 'football_pitches.id', '=', 'orders.football_pitch_id')
                 ->where('football_pitches.from_football_pitch_id', '=', $validated['football_pitch_id'])
                 ->orWhere('football_pitches.to_football_pitch_id', '=', $validated['football_pitch_id'])
@@ -272,7 +282,7 @@ class OrderController extends Controller
             'end_at' => $validated['end_at'],
         ], $football_pitch->price_per_hour, $football_pitch->price_per_peak_hour);
         //dd($total_price);
-        $obj = Order::create([
+        $arr = [
             'start_at' => getDateTimeLaravel($validated['start_at']),
             'end_at' => getDateTimeLaravel($validated['end_at']),
             'football_pitch_id' => $validated['football_pitch_id'],
@@ -282,8 +292,13 @@ class OrderController extends Controller
             'phone' => $validated['phone'],
             'email' => $validated['email'],
             'code' => strtoupper(Str::random(10)),
-        ]);
-        event(new ClientStoreOrderEvent($obj));
+        ];
+        if (Auth::check()) {
+            $arr['by_user_id'] = Auth::user()->id;
+        }
+        $obj = Order::create($arr);
+        dispatch(new ClientStoreFootballPitchJob($obj));
+        dispatch(new SendMailWhenClientStoreFootballPitchJob($obj));
         return response()->json([
             'status' => 'success',
             'message' => 'Sân bóng đã được đặt thành công, chuyển hướng sau 3 giây',
@@ -324,7 +339,9 @@ class OrderController extends Controller
                         getDateTimeLaravel($end_of_day),
                     ];
                     //tìm những sân đang được đặt trong hôm nay
-                    $orders = Order::query()->where('football_pitch_id', $order->football_pitch_id)
+                    $orders = Order::query()
+                        ->where('status', '<>', OrderStatusEnum::Cancel)
+                        ->where('football_pitch_id', $order->football_pitch_id)
                         ->where('id', '!=', $order->id)
                         ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
                     //nếu sân yêu cầu đã được đặt trong thời gian đó rồi thì trả về lỗi
@@ -353,6 +370,7 @@ class OrderController extends Controller
                         }
                     } else {
                         $orders = Order::query()
+                            ->where('status', '<>', OrderStatusEnum::Cancel)
                             ->join('football_pitches', 'football_pitches.id', '=', 'orders.football_pitch_id')
                             ->where('orders.id', '!=', $order->id)
                             ->where('football_pitches.from_football_pitch_id', '=', $order->football_pitch_id)
@@ -417,6 +435,9 @@ class OrderController extends Controller
                         'note' => 'nullable|string',
                     ]);
                     $validated['status'] = OrderStatusEnum::Finish;
+                    if (!$order->user_id) {
+                        $validated['user_id'] = auth()->user()->id;
+                    }
                     $order->update($validated);
                     $arr = [
                         'id' => $order->id,
@@ -427,6 +448,10 @@ class OrderController extends Controller
                             'football_pitch_id' => $order->footballPitch->id,
                         ]
                     ];
+                    // if ($order->status != OrderStatusEnum::Finish) {
+                    //     dispatch(new SendMailWhenUpdateStatusOrderJob($order));
+                    // }
+                    dispatch(new SendMailWhenUpdateStatusOrderJob($order));
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Yêu cầu đã được cập nhật hoàn tất',
@@ -512,7 +537,9 @@ class OrderController extends Controller
             getDateTimeLaravel($end_of_day),
         ];
         //tìm những sân đang được đặt trong ngày đặt
-        $orders = Order::query()->where('football_pitch_id', $validated['football_pitch_id'])
+        $orders = Order::query()
+            ->where('status', '<>', OrderStatusEnum::Cancel)
+            ->where('football_pitch_id', $validated['football_pitch_id'])
             ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
         //nếu sân yêu cầu đã được đặt trong thời gian đó rồi thì trả về lỗi
         foreach ($orders as $item) {
@@ -525,7 +552,9 @@ class OrderController extends Controller
         }
         //tìm xem sân đang yêu cầu có đang liên kết với sân nào không, có thì trả về lỗi
         if ($football_pitch->from_football_pitch_id && $football_pitch->to_football_pitch_id) {
-            $order_with_football_pitch_links = Order::query()->where('football_pitch_id', $football_pitch->from_football_pitch_id)
+            $order_with_football_pitch_links = Order::query()
+                ->where('status', '<>', OrderStatusEnum::Cancel)
+                ->where('football_pitch_id', $football_pitch->from_football_pitch_id)
                 ->orWhere('football_pitch_id', $football_pitch->to_football_pitch_id)
                 ->whereBetween('start_at', $arrInTime)->get(['start_at', 'end_at']);
             foreach ($order_with_football_pitch_links as $item) {
@@ -538,6 +567,7 @@ class OrderController extends Controller
             }
         } else {
             $orders = Order::query()
+                ->where('status', '<>', OrderStatusEnum::Cancel)
                 ->join('football_pitches', 'football_pitches.id', '=', 'orders.football_pitch_id')
                 ->where('football_pitches.from_football_pitch_id', '=', $validated['football_pitch_id'])
                 ->orWhere('football_pitches.to_football_pitch_id', '=', $validated['football_pitch_id'])
@@ -602,7 +632,9 @@ class OrderController extends Controller
         $data = [];
         $date_time_start = new Carbon($validated['date'] . ' ' . $football_pitch->time_start);
         $date_time_end = new Carbon($validated['date'] . ' ' . $football_pitch->time_end);
-        $orders = Order::query()->where('football_pitch_id', $validated['football_pitch_id'])
+        $orders = Order::query()
+            ->where('status', '<>', OrderStatusEnum::Cancel)
+            ->where('football_pitch_id', $validated['football_pitch_id'])
             ->whereBetween('start_at', [
                 $date_time_start->toDateTimeString(),
                 $date_time_end->toDateTimeString()
@@ -640,30 +672,83 @@ class OrderController extends Controller
         $peak_hour = PeakHour::all()->first();
         $nearStartAt = new Carbon($validated['start_at']);
         $nearEndAt = new Carbon($validated['end_at']);
+        //kiểm tra thời gian kết thúc <  bắt đầu
         if ($nearEndAt <= $nearStartAt) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Vui lòng chọn thời gian kết thúc lớn hơn thời gian bắt đầu',
             ], Response::HTTP_BAD_REQUEST);
         }
-        $nearStartAt->addMinutes(1);
-        $nearEndAt->subMinutes(1);
-        $orders = Order::query()->whereBetween('start_at', [
-            $validated['start_at'],
-            $nearEndAt->toDateTimeString(),
-        ])
-        ->orWhereBetween('end_at', [
-            $nearStartAt->toDateTimeString(),
-            $validated['end_at'],
-        ])
-        ->groupBy('football_pitch_id')->get(['football_pitch_id']);
+
+        $startOfDay = new Carbon($validated['start_at']);
+        $endOfDay = new Carbon($validated['end_at']);
+        $startOfDay->startOfDay();
+        $endOfDay->endOfDay();
+        $orders = Order::query()
+            ->where('status', '<>', OrderStatusEnum::Cancel)
+            ->whereBetween('start_at', [
+                $startOfDay->toDateTimeString(),
+                $endOfDay->toDateTimeString()
+            ])
+            ->with('footballPitch')
+            ->get();
+        
+        $arrFootballPitchId = [];
+        foreach ($orders as $item) {
+            if (isOrderInTime($validated['start_at'], $validated['end_at'], $item->start_at, $item->end_at))
+            {
+                if (!in_array($item->football_pitch_id, $arrFootballPitchId)) {
+                    $arrFootballPitchId[] = $item->football_pitch_id;
+                }
+            }
+            $fromFootballPitchId = $item->footballPitch->from_football_pitch_id;
+            $toFootballPitchId = $item->footballPitch->to_football_pitch_id;
+            if ($fromFootballPitchId && $toFootballPitchId) {
+                if (!in_array($fromFootballPitchId, $arrFootballPitchId)) {
+                    $arrFootballPitchId[] = $fromFootballPitchId;
+                }
+                if (!in_array($toFootballPitchId, $arrFootballPitchId)) {
+                    $arrFootballPitchId[] = $toFootballPitchId;
+                }
+            }
+        }
         $footballPitchs = FootballPitch::query()
             ->where('is_maintenance', 0)
-            ->whereNotIn('id', $orders->pluck('football_pitch_id'))
+            ->whereNotIn('id', $arrFootballPitchId)
             ->with('pitchType')
             ->get();
+
+        $footballPitchsFinal = [];
+
+        foreach ($footballPitchs as $football_pitch) {
+            if ($football_pitch->from_football_pitch_id && $football_pitch->to_football_pitch_id) {
+                $order_with_football_pitch_links = Order::query()
+                    ->where('status', '<>', OrderStatusEnum::Cancel)
+                    ->where(function ($query) use ($football_pitch) {
+                        $query->where('football_pitch_id', $football_pitch->from_football_pitch_id)
+                        ->orWhere('football_pitch_id', $football_pitch->to_football_pitch_id);
+                    })
+                    ->where(function ($query) use ($nearStartAt, $nearEndAt, $validated) {
+                        $query->whereBetween('start_at', [
+                            $validated['start_at'],
+                            $nearEndAt->toDateTimeString(),
+                        ])
+                            ->orWhereBetween('end_at', [
+                                $nearStartAt->toDateTimeString(),
+                                $validated['end_at'],
+                            ]);
+                    })
+                    ->groupBy('football_pitch_id')->get(['football_pitch_id']);
+                if ($order_with_football_pitch_links->count() == 0) {
+                    $footballPitchsFinal[] = $football_pitch;
+                }
+            } else {
+                $footballPitchsFinal[] = $football_pitch;
+            }
+        }
+        //dd($footballPitchsFinal);
         $data = [];
-        foreach ($footballPitchs as $item) {
+        foreach ($footballPitchsFinal as $item) {
             $total_price = getPriceOrder([
                 'time_start' => $peak_hour->start_at,
                 'time_end' => $peak_hour->end_at,
@@ -675,6 +760,9 @@ class OrderController extends Controller
                 'total_price' => printMoney($total_price),
                 'name' => $item->name,
                 'quantity' => $item->pitchType->quantity,
+                'start_at' => $validated['start_at'],
+                'end_at' => $validated['end_at'],
+                'football_pitch_id' => $item->id,
 
             ];
         }
@@ -682,5 +770,36 @@ class OrderController extends Controller
             'status' => 'success',
             'data' => $data,
         ]);
+    }
+
+    public function clearOrderNotUse()
+    {
+        $hours_not_use = 24;
+        $date = new Carbon();
+        $date->subHours($hours_not_use);
+
+        $orders = Order::query()
+            ->where('status', OrderStatusEnum::Wait)
+            ->where('created_at', '<=', $date->toDateTimeString())
+            ->get();
+
+        $orders->each(function ($order) {
+            $order->status = 0;
+            $order->save();
+        });
+
+        return to_route('admin.orderTable')->with('message', 'Xóa các yêu cầu rác thành công');
+    }
+
+    public function cancelOrder(string $id)
+    {
+        $order = Order::find($id);
+        $user = auth()->user();
+        if ($order->by_user_id == $user->id) {
+            $order->status = OrderStatusEnum::Cancel;
+            $order->save();
+        }
+
+        return redirect()->back()->with('message', 'Hủy sân thành công');
     }
 }

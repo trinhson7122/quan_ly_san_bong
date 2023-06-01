@@ -12,9 +12,11 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Sân bóng</h5>
+                    @can('checkSuperAdmin', auth()->user())
                     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
                         data-bs-target="#add-football-pitch-type-modal">Thêm sân bóng
                     </button>
+                    @endcan
                     <table id="table_football_pitch" class="display" style="width:100%">
                         <thead>
                             <tr>

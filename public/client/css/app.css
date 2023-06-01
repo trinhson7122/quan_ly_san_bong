@@ -31,3 +31,17 @@
     padding: 10px;
     border-radius: 50%;
 }
+.auth-title {
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 150%;
+}
+#profile-overview .label {
+    color: #37517e;
+    font-weight: bold;
+}
+.custom-input {
+    width: auto!important;
+    display: inline!important;
+  }

@@ -35,8 +35,11 @@ html {
 .text-running {
   color: var(--fc-bg-event-color);
 }
+.btn-block {
+  width: 100%;
+}
 /*  */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .carousel-inner .carousel-item > div {
     display: none;
   }
@@ -51,7 +54,6 @@ html {
   display: flex;
 }
 
-/* medium and up screens */
 @media (min-width: 768px) {
 
   .carousel-inner .carousel-item-end.active,
@@ -68,4 +70,4 @@ html {
 .carousel-inner .carousel-item-end,
 .carousel-inner .carousel-item-start { 
   transform: translateX(0);
-}
+} */

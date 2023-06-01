@@ -46,6 +46,11 @@ Breadcrumbs::for('orderCheckout', function ($trail) {
     $trail->parent('orderCalendar');
     $trail->push('Thanh toán');
 });
+//Home > Thong tin chuyen khoan
+Breadcrumbs::for('bankInformation', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Thông tin chuyển khoản');
+});
 //client breadcrumbs
 //Home
 Breadcrumbs::for('client-home', function ($trail) {
@@ -55,4 +60,24 @@ Breadcrumbs::for('client-home', function ($trail) {
 Breadcrumbs::for('client-footballPitch', function ($trail) {
     $trail->parent('client-home');
     $trail->push('Thông tin sân bóng');
+});
+//Home > đăng nhập
+Breadcrumbs::for('client-login', function ($trail) {
+    $trail->parent('client-home');
+    $trail->push('Đăng nhập');
+});
+//Home > đăng ký
+Breadcrumbs::for('client-register', function ($trail) {
+    $trail->parent('client-home');
+    $trail->push('Đăng ký');
+});
+//Home > THông tin cá nhân
+Breadcrumbs::for('client-profile', function ($trail) {
+    $trail->parent('client-home');
+    $trail->push('Thông tin cá nhân');
+});
+//Home > Yêu cầu đặt sân của tôi
+Breadcrumbs::for('client-order-by-me', function ($trail) {
+    $trail->parent('client-home');
+    $trail->push('Yêu cầu đặt sân của tôi');
 });

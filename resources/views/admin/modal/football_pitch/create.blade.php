@@ -5,7 +5,7 @@
             <form action="{{ route('footballPitch.store') }}" method="POST">
                 @csrf
                 <div class="modal-header bg-success text-light">
-                    <h5 class="modal-title text-light">Thêm loại sân bóng</h5>
+                    <h5 class="modal-title text-light">Thêm sân bóng</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

@@ -5,11 +5,11 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
     protected $fillable = [
         'name',
         'phone',
@@ -23,11 +23,22 @@ class Order extends Model
         'note',
         'user_id',
         'football_pitch_id',
+        'by_user_id',
     ];
 
     public function footballPitch()
     {
         return $this->belongsTo(FootballPitch::class, 'football_pitch_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function byUser()
+    {
+        return $this->belongsTo(User::class, 'by_user_id');
     }
 
     public function total()
@@ -53,5 +64,10 @@ class Order extends Model
         $m = $start_at->diffInMinutes($end_at) % 60;
         $totalTime = "$h giờ $m phút";
         return $totalTime;
+    }
+
+    public function createdAt()
+    {
+        return $this->created_at->diffForHumans();
     }
 }

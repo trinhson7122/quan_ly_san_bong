@@ -43,7 +43,7 @@ function getPriceOrder($arrTimeMain, $arrDateTimeCheck, $price_per_hour, $price_
     $dateTimeEnd->setTimezone(config('app.timezone'));
 
 
- 
+
     $timeMainStart = new Carbon($dateTimeStart->format('Y-m-d H:i:s'));
     $time = explode(':', $arrTimeMain['time_start']);
     $timeMainStart->setTime($time[0], $time[1], $time[2]);
@@ -73,11 +73,53 @@ function isOrderInTime(string $datetime_start, string $datetime_end, string $dat
     $dateTimeMain_start = new Carbon($dateTimeMain_start);
     $dateTimeMain_end = new Carbon($dateTimeMain_end);
 
-    if($datetime_start >= $dateTimeMain_start && $datetime_start < $dateTimeMain_end) {
+    if ($datetime_start >= $dateTimeMain_start && $datetime_start < $dateTimeMain_end) {
         return true;
     }
-    if($datetime_end > $dateTimeMain_start && $datetime_end <= $dateTimeMain_end) {
+    if ($datetime_end > $dateTimeMain_start && $datetime_end <= $dateTimeMain_end) {
         return true;
     }
     return false;
+}
+
+function setDateFilter($order)
+{
+    switch ($order['filter']) {
+        case 'today':
+            $order['date']['start']->startOfDay();
+            $order['date']['end']->endOfDay();
+            //
+            $order['dateCompare']['start']->subDays();
+            $order['dateCompare']['start']->startOfDay();
+            $order['dateCompare']['end']->subDays();
+            $order['dateCompare']['end']->endOfDay();
+            break;
+        case 'this_month':
+            $order['date']['start']->startOfMonth();
+            $order['date']['end']->endOfMonth();
+            //
+            $order['dateCompare']['start']->subMonths();
+            $order['dateCompare']['start']->startOfMonth();
+            $order['dateCompare']['end']->subMonths();
+            $order['dateCompare']['end']->endOfMonth();
+            break;
+        case 'this_year':
+            $order['date']['start']->startOfYear();
+            $order['date']['end']->endOfYear();
+            //
+            $order['dateCompare']['start']->subYears();
+            $order['dateCompare']['start']->startOfYear();
+            $order['dateCompare']['end']->subYears();
+            $order['dateCompare']['end']->endOfYear();
+            break;
+        default:
+            $order['date']['start']->startOfDay();
+            $order['date']['end']->endOfDay();
+            //
+            $order['dateCompare']['start']->subDays();
+            $order['dateCompare']['start']->startOfDay();
+            $order['dateCompare']['end']->subDays();
+            $order['dateCompare']['end']->endOfDay();
+    }
+    return $order;
 }

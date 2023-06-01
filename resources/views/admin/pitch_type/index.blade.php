@@ -12,9 +12,11 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Loại Sân</h5>
+                    @can('checkSuperAdmin', auth()->user())
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" 
                         data-bs-target="#add-pitch-type-modal">Thêm thể loại
                     </button>
+                    @endcan
                     <table class="table">
                         <thead>
                             <tr>
@@ -33,6 +35,7 @@
                                     <td>{{ $item->quantity }}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->created_at->diffForHumans() }}</td>
+                                    @can('checkSuperAdmin', auth()->user())
                                     <td>
                                         <button data-url_set="{{ route('pitchType.update', $item->id) }}" data-url_get="{{ route('pitchType.show', $item->id) }}" type="button" class="btn-update-pitch-type btn btn-warning" 
                                             data-bs-toggle="modal" data-bs-target="#update-pitch-type-modal">Sửa
@@ -45,6 +48,7 @@
                                             <button class="confirm-btn btn btn-danger">Xóa</button>
                                         </form>
                                     </td>
+                                    @endcan
                                 </tr>
                             @endforeach
                         </tbody>

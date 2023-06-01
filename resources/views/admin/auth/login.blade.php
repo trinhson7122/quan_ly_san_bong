@@ -21,7 +21,7 @@
 
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Đăng nhập với tư cách quản trị viên</h5>
-                    <p class="text-center small">Enter your email & password to login</p>
+                    <p class="text-center small">Nhập địa chỉ email và mật khẩu để đăng nhập</p>
                   </div>
 
                   <form class="row g-3 needs-validation" action="{{ route('admin.processLogin') }}" method="post">
@@ -31,20 +31,20 @@
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
                         <input type="email" value="{{ old('email') }}" name="email" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Please enter your email.</div>
+                        <div class="invalid-feedback">Địa chỉ email</div>
                       </div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
+                      <label for="yourPassword" class="form-label">Mật khẩu</label>
                       <input type="password" name="password" class="form-control" id="yourPassword" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
+                      <div class="invalid-feedback">Mật khẩu</div>
                     </div>
 
                     <div class="col-12">
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                        <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
                       </div>
                     </div>
                     @if (session()->has('message'))
@@ -53,10 +53,7 @@
                       </div>
                     @endif
                     <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
-                    </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
+                      <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
                     </div>
                   </form>
 

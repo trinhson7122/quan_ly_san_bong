@@ -50,8 +50,8 @@
     <script src="{{ asset('js/ajax.js') }}"></script>
     <script src="{{ asset('js/func.js') }}"></script>
     <script src="{{ asset('js/datatableSetUp.js') }}"></script>
-    {{-- <script src="{{ asset('js/pusher.js') }}"></script> --}}
-
+    <script src="{{ asset('js/pusher.js') }}"></script>
+    @stack('scripts')
 
 </body>
 

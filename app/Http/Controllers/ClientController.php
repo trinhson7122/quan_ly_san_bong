@@ -71,7 +71,7 @@ class ClientController extends Controller
         $title = "Thông tin đặt sân";
         $order = Order::query()->with('footballPitch')->where('status', OrderStatusEnum::Wait)->find($id);
         if (!$order) {
-            return abort(404);
+            return to_route('client.index');
         }
         $bankInfo = BankInformation::query()->where('isShow', 1)->get();
         return view('client.home.checkout', [
@@ -110,6 +110,29 @@ class ClientController extends Controller
             'title' => $title,
             'order' => $order,
             'status' => $status,
+        ]);
+    }
+    //trang ca nhan
+    public function profile()
+    {
+        $title = "Cá nhân";
+        $user = auth()->user();
+
+        return view('client.home.profile', [
+            'title' => $title,
+            'user' => $user,
+        ]);
+    }
+    //order cua toi
+    public function orderByMe()
+    {
+        $title = "Đặt sân";
+        $user = auth()->user();
+        $orders = Order::query()->where('by_user_id', $user->id)->orderByDesc('updated_at')
+            ->with('footballPitch')->paginate(5);
+        return view('client.home.order_by_me', [
+            'title' => $title,
+            'orders' => $orders,
         ]);
     }
 }

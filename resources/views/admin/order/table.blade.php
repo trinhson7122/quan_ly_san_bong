@@ -26,12 +26,12 @@
                         </li>
 
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#football-pitch-edit"
-                                aria-selected="false" role="tab" tabindex="-1">Chỉnh sửa sân bóng</button>
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#advantage" aria-selected="false"
+                                role="tab" tabindex="-1">Tùy chỉnh</button>
                         </li>
 
                     </ul>
-                    
+
                     <div class="tab-content pt-2">
                         {{-- tat ca --}}
                         <div class="tab-pane fade active show" id="all" role="tabpanel">
@@ -71,10 +71,19 @@
                                 </thead>
                             </table>
                         </div>
+                        {{-- tuy chinh --}}
+                        <div class="tab-pane fade" id="advantage" role="tabpanel">
+                            <form action="{{ route('order.clearOrderNotUse') }}" method="post">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="confirm-btn btn btn-danger mb-2">Xóa các yêu cầu đặt sân rác</button>
+                            </form>
+                        </div>
                     </div>
 
                 </div>
             </div>
         </section>
     </main>
+    @include('admin.modal.order.updateOrderCalendar')
 @endsection

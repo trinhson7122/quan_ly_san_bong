@@ -7,8 +7,10 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FootballPitchController;
 use App\Http\Controllers\FootballPitchDetailController;
+use App\Http\Controllers\IdentityPaperController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PitchTypeController;
+use App\Http\Controllers\UserController;
 use App\Models\BankInformation;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +25,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //client
-Route::view('test', 'client.master')->name('test');
 Route::controller(ClientController::class)->group(function () {
     Route::name('client.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -33,14 +34,29 @@ Route::controller(ClientController::class)->group(function () {
     });
 });
 Route::middleware('client')->group(function () {
-    Route::controller(AuthController::class)->group(function (){
+    Route::controller(AuthController::class)->group(function () {
         Route::get('logout', 'processClientLogout')->name('client.logout');
+    });
+    Route::controller(ClientController::class)->group(function () {
+        Route::get('profile', 'profile')->name('client.profile');
+        Route::get('order-by-me', 'orderByMe')->name('client.orderByMe');
+    });
+    Route::controller(UserController::class)->group(function () {
+        Route::put('update/{id}', 'update')->name('user.update');
+        Route::put('changePassword/{id}', 'changePassword')->name('user.changePassword');
+    });
+    Route::controller(OrderController::class)->group(function () {
+        Route::put('cancelOrder/{id}', 'cancelOrder')->name('order.cancelOrder');
     });
 });
 Route::middleware('not_client')->group(function () {
-    Route::controller(AuthController::class)->group(function (){
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('auth/redirect/{provider_name}', 'socialLogin')->name('client.socialLogin');
+        Route::get('auth/callback/{provider_name}', 'socialCallback')->name('client.socialCallback');
         Route::get('login', 'clientLogin')->name('client.login');
+        Route::post('login', 'processClientLogin')->name('client.processLogin');
         Route::get('register', 'clientRegister')->name('client.register');
+        Route::post('register', 'processClientRegister')->name('client.processRegister');
     });
 });
 //admin
@@ -56,6 +72,7 @@ Route::middleware('admin')->group(function () {
                 Route::get('order-table', 'orderTable')->name('orderTable');
                 Route::get('checkout-order/{id?}', 'checkout')->name('checkout');
                 Route::get('bank-information', 'bankInformation')->name('bankInformation');
+                Route::get('employe', 'employe')->name('employe');
             });
             Route::controller(AuthController::class)->group(function () {
                 Route::get('logout', 'processAdminLogout')->name('logout');
@@ -80,6 +97,11 @@ Route::middleware('admin')->group(function () {
             Route::controller(FootballPitchDetailController::class)->group(function () {
                 Route::post('footballPitchDetail', 'store')->name('store');
                 Route::delete('footballPitchDetail/{id}', 'destroy')->name('destroy');
+            });
+        });
+        Route::name('order.')->group(function () {
+            Route::controller(OrderController::class)->group(function () {
+                Route::delete('clearOrderNotUse', 'clearOrderNotUse')->name('clearOrderNotUse');
             });
         });
     });
@@ -127,5 +149,31 @@ Route::prefix('api')->group(function () {
             Route::delete('bank_information/{id}', 'destroy')->name('bank_information.destroy');
             Route::put('bank_information_change_display/{id}', 'change_display')->name('bank_information.change_display');
         });
+
+        Route::controller(UserController::class)->group(function () {
+            Route::get('fetchEmploye', 'fetchEmploye')->name('user.fetchEmploye');
+            Route::post('storeEmploye', 'storeEmploye')->name('user.storeEmploye');
+            Route::delete('destroyEmploye/{id?}', 'destroyEmploye')->name('user.destroyEmploye');
+            Route::put('updateEmploye/{id?}', 'updateEmploye')->name('user.updateEmploye');
+            Route::get('showEmploye/{id?}', 'show')->name('user.showEmploye');
+        });
+
+        Route::controller(IdentityPaperController::class)->group(function () {
+            Route::get('showByUserId/{id?}', 'showByUserId')->name('identity_paper.showByUserId');
+            Route::post('identity_paper', 'store')->name('identity_paper.store');
+            Route::delete('identity_paper/{id?}', 'destroy')->name('identity_paper.destroy');
+        });
     });
 });
+//client config
+// Route::get('{any}', function ($any) {
+//     return 1;
+//     $rex = "/^(((?!admin[.\/])(?!api[.\/]).))*$/";
+//     // if (!preg_match($rex, $any)) {
+//     //     echo "website dang bao tri";
+//     // }
+//     echo preg_match($rex, $any);
+// })->where('any', '.*');
+// Route::get('', function () {
+//     echo 111;
+// });

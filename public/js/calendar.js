@@ -104,13 +104,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     $("#update-order-modal input[name='deposit']").val(
                         response.data.deposit
                     );
+                    $("#update-order-modal textarea[name='note']").html(
+                        response.data.note
+                    );
                     let btn = $("#update-order-modal #checkout")[0];
                     let href = btn.href;
-                    let arr = href.split('/');
+                    let arr = href.split("/");
                     arr[arr.length - 1] = info.event.id;
-                    href = arr.toString().replaceAll(',', '/');
+                    href = arr.toString().replaceAll(",", "/");
                     btn.href = href;
-                    //console.log(response);
+                    if (response.data.status == 3) {
+                        // $("#update-order-modal form")[0].dataset.id =
+                        //     info.event.id;
+                        // $("#update-order-modal").modal("show");
+                        $("#update-order-modal .btn-update-order").hide();
+                    }
+                    else {
+                        $("#update-order-modal .btn-update-order").show();
+                    }
                 },
             });
             $("#update-order-modal form")[0].dataset.id = info.event.id;
@@ -166,39 +177,4 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     });
     calendar.render();
-
-    $(document).on('click', '.btn-update-order', function () {
-        const form = $(this).parents('form');
-        $.ajax({
-            type: "post",
-            url: BASE_URL_API.updateOrder + form[0].dataset.id,
-            data: form.serialize(),
-            dataType: "json",
-            success: function (response) {
-                $.toast({
-                    heading: "Thành công",
-                    text: response.message,
-                    showHideTransition: "plain",
-                    icon: response.status,
-                    position: "bottom-right",
-                });
-                calendar.getEventById(form[0].dataset.id).setProp('title', response.data.title)
-                calendar.getEventById(form[0].dataset.id).setProp('backgroundColor', '#8fdf82')
-                //calendar.removeAllEvents();
-                //calendar.refetchEvents();
-                $('#update-order-modal').modal('hide');
-            },
-            error: function (response) {
-                $('#update-order-modal').modal('hide');
-                response = response.responseJSON;
-                $.toast({
-                    heading: "Thất bại",
-                    text: response.message,
-                    showHideTransition: "plain",
-                    icon: 'error',
-                    position: "bottom-right",
-                });
-            },
-        });
-    });
 });
